@@ -103,7 +103,7 @@ def export_table(table_name):
     conn.close()
     return df
 
-# ---------- Helpers: badges + namen ----------
+# ---------- Helpers: badges + namen + stats ----------
 def render_badges_csv(csv_text: str) -> str:
     names = [n.strip() for n in (csv_text or "").split(",") if n.strip()]
     if not names:
@@ -139,11 +139,21 @@ def get_all_likers():
             names.add(n.strip())
     return sorted(names, key=lambda s: s.lower())
 
+def render_stats_inline(total: int, last_date: str) -> str:
+    # Compacte, inline statregel: zelfde font-size voor label en waarde
+    return f"""
+    <div class="stats-inline">
+      <span class="stat"><strong>Keer gegeten:</strong> <span class="val">{total}</span></span>
+      <span class="sep">•</span>
+      <span class="stat"><strong>Laatst gegeten:</strong> <span class="val">{escape(str(last_date))}</span></span>
+    </div>
+    """
+
 # ---------- UI ----------
 st.set_page_config(page_title="🍳 Recepten & Eetlijst", layout="wide")
 st.title("🍳 Recepten & Eetlijst")
 
-# --- badges style ---
+# --- styles ---
 st.markdown("""
 <style>
 .badges { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
@@ -152,6 +162,14 @@ st.markdown("""
   background:#d9e9b1; color:#2f5d1e; border:1px solid #9bb56b;
   font-weight:600; font-size:0.85rem; line-height:1.6;
 }
+
+/* Compacte inline stats */
+.stats-inline {
+  display:flex; align-items:center; gap:10px; margin-top:6px;
+  font-size:0.95rem; line-height:1.6;
+}
+.stats-inline .stat .val { font-weight:600; }
+.stats-inline .sep { opacity:0.6; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -231,8 +249,8 @@ else:
 
             with top[1]:
                 total, last_date = get_meal_stats(rid)
-                st.metric(label="Keer gegeten", value=total)
-                st.metric(label="Laatst gegeten", value=last_date)
+                # Vervangt st.metric door compacte inline stats met gelijke font-size
+                st.markdown(render_stats_inline(total, last_date), unsafe_allow_html=True)
 
             # Tabs
             tabs = st.tabs(["Ingrediënten", "Bereiding", "Eetmoment loggen", "✏️ Bewerken", "Verwijderen"])
