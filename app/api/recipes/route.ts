@@ -1,0 +1,57 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+
+export async function GET(req: NextRequest) {
+  const search = req.nextUrl.searchParams.get('search') ?? '';
+  const liker = req.nextUrl.searchParams.get('liker') ?? '';
+
+  const recipes = await prisma.recipe.findMany({
+    where: {
+      AND: [
+        search
+          ? {
+              OR: [
+                { name: { contains: search, mode: 'insensitive' } },
+                { ingredients: { contains: search, mode: 'insensitive' } },
+                { instructions: { contains: search, mode: 'insensitive' } },
+                { tags: { contains: search, mode: 'insensitive' } },
+              ],
+            }
+          : {},
+        liker ? { liked_by: { contains: liker, mode: 'insensitive' } } : {},
+      ],
+    },
+    include: { meals: true },
+    orderBy: { name: 'asc' },
+  });
+
+  const result = recipes.map((r) => {
+    const dates = r.meals.map((m) => m.ate_on).sort().reverse();
+    return {
+      id: r.id,
+      name: r.name,
+      ingredients: r.ingredients,
+      instructions: r.instructions,
+      tags: r.tags,
+      liked_by: r.liked_by,
+      mealCount: r.meals.length,
+      lastEaten: dates[0] ?? null,
+    };
+  });
+
+  return NextResponse.json(result);
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const recipe = await prisma.recipe.create({
+    data: {
+      name: body.name,
+      ingredients: body.ingredients ?? '',
+      instructions: body.instructions ?? '',
+      tags: body.tags ?? '',
+      liked_by: body.liked_by ?? '',
+    },
+  });
+  return NextResponse.json(recipe, { status: 201 });
+}
