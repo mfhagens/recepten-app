@@ -125,10 +125,10 @@ export default function Home() {
                   <button
                     key={liker}
                     onClick={() => toggleLiker(liker)}
-                    className={`px-3 py-1 text-xs tracking-wider uppercase font-medium border transition-colors ${
+                    className={`px-4 py-1.5 text-sm rounded-full border transition-all ${
                       active
                         ? 'bg-stone-900 text-white border-stone-900'
-                        : 'bg-transparent text-stone-600 border-stone-400 hover:border-stone-900 hover:text-stone-900'
+                        : 'bg-white text-stone-600 border-stone-300 hover:border-stone-900 hover:text-stone-900'
                     }`}
                   >
                     {active ? '✓ ' : ''}{liker}

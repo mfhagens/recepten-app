@@ -63,7 +63,7 @@ export default function Header({ onAddClick }: Props) {
         <div className="w-32 flex justify-end">
           <button
             onClick={onAddClick}
-            className="flex items-center gap-2 bg-white hover:bg-stone-100 text-stone-900 px-4 py-2 text-sm font-medium tracking-wide transition-colors"
+            className="flex items-center gap-2 bg-white hover:bg-stone-100 text-stone-900 px-5 py-2 rounded-full text-sm font-medium transition-all"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
