@@ -201,7 +201,7 @@ export default function WeekPlanning() {
             const key = fmt(date);
             const day = getDay(date);
             const isToday = key === today;
-            const suggestions = getSuggestions(day.eaters);
+            const suggestions = getSuggestions(day.eaters.filter(e => allLikers.includes(e)));
             const planned = recipes.find((r) => r.id === day.recipe_id) ?? null;
             const isOpen = openDay === key;
             const guestEaters = day.eaters.filter((e) => !allLikers.includes(e));
