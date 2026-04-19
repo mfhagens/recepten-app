@@ -15,7 +15,7 @@ export default function Home() {
   const [likerFilters, setLikerFilters] = useState<string[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<RecipeWithStats | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<'recepten' | 'planning'>('recepten');
+  const [activeTab, setActiveTab] = useState<'recepten' | 'planning'>('planning');
 
   useEffect(() => {
     fetch('/api/photos/backfill', { method: 'POST' });

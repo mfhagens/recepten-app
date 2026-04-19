@@ -49,7 +49,7 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
       <div className="border-t border-sky-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
           <div className="flex gap-0">
-            {(['recepten', 'planning'] as const).map((tab) => (
+            {(['planning', 'recepten'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => onTabChange(tab)}
