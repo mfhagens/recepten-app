@@ -41,14 +41,16 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
         </div>
 
         {/* Masthead title */}
-        <div className="flex-1 text-center">
-          <h1 className="font-[var(--font-playfair)] font-bold text-white tracking-tight leading-none"
-              style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}>
-            Recepten
-          </h1>
-          <p className="text-xs tracking-[0.25em] uppercase mt-1" style={{ color: 'rgba(255,255,255,0.65)' }}>
-            Hagens.org
-          </p>
+        <div className="flex-1 flex flex-col items-center">
+          <div>
+            <h1 className="font-[var(--font-playfair)] font-bold text-white tracking-tight leading-none"
+                style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}>
+              Recepten
+            </h1>
+            <p className="text-xs tracking-[0.25em] uppercase mt-1" style={{ color: 'rgba(255,255,255,0.65)' }}>
+              Hagens
+            </p>
+          </div>
         </div>
 
         {/* Right: Nieuw button */}
