@@ -48,7 +48,7 @@ export default function LikerInput({ value, onChange, suggestions }: Props) {
           {value.map((liker) => (
             <span
               key={liker}
-              className="flex items-center gap-1.5 text-sm bg-stone-900 text-white rounded-full px-4 py-1.5"
+              className="flex items-center gap-1.5 text-sm bg-stone-900 text-white rounded-xl px-4 py-1.5"
             >
               {liker}
               <button
@@ -71,7 +71,7 @@ export default function LikerInput({ value, onChange, suggestions }: Props) {
               key={s}
               type="button"
               onClick={() => addLiker(s)}
-              className="px-4 py-1.5 text-sm rounded-full border border-stone-300 text-stone-600 hover:border-stone-900 hover:text-stone-900 transition-all"
+              className="px-4 py-1.5 text-sm rounded-xl font-medium bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4] transition-all"
             >
               {s}
             </button>
@@ -86,7 +86,7 @@ export default function LikerInput({ value, onChange, suggestions }: Props) {
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Of typ een nieuwe naam…"
-        className="w-full border border-stone-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-900 bg-white"
+        className="w-full border border-stone-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-900 bg-white"
       />
       <p className="text-xs text-stone-400 mt-1 ml-1">Druk op Enter of komma om toe te voegen</p>
     </div>

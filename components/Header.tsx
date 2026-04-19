@@ -65,7 +65,7 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
         <div className="w-32 flex justify-end">
           <button
             onClick={onAddClick}
-            className="flex items-center gap-2 bg-white hover:bg-stone-100 text-stone-900 px-5 py-2 rounded-full text-sm font-medium transition-all"
+            className="flex items-center gap-2 bg-[#E8D9C6] hover:bg-[#D9C9B4] text-stone-900 px-5 py-2 rounded-xl text-sm font-semibold transition-all"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

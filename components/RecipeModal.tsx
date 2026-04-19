@@ -229,7 +229,7 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
               )}
               <button
                 onClick={handleLogMeal}
-                className="w-full bg-stone-900 hover:bg-stone-700 text-white rounded-full py-2.5 text-sm font-medium transition-all"
+                className="w-full bg-stone-900 hover:bg-stone-700 text-white rounded-xl py-2.5 text-sm font-semibold transition-all"
               >
                 Maaltijd loggen
               </button>
@@ -296,7 +296,7 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
               <button
                 onClick={handleSaveEdit}
                 disabled={!editName.trim() || saving}
-                className="w-full bg-stone-900 hover:bg-stone-700 disabled:bg-stone-300 text-white rounded-full py-2.5 text-sm font-medium transition-all"
+                className="w-full bg-stone-900 hover:bg-stone-700 disabled:bg-stone-300 text-white rounded-xl py-2.5 text-sm font-semibold transition-all"
               >
                 {saving ? 'Opslaan…' : 'Wijzigingen opslaan'}
               </button>

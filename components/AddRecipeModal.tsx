@@ -142,14 +142,14 @@ export default function AddRecipeModal({ onClose, onAdded, allLikers }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 rounded-full border border-stone-300 text-sm font-medium text-stone-600 hover:border-stone-900 hover:text-stone-900 transition-all"
+              className="flex-1 py-3 rounded-xl text-sm font-semibold bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4] transition-all"
             >
               Annuleren
             </button>
             <button
               type="submit"
               disabled={!name.trim() || saving}
-              className="flex-1 py-3 rounded-full bg-stone-900 hover:bg-stone-700 disabled:bg-stone-300 text-white text-sm font-medium transition-all"
+              className="flex-1 py-3 rounded-xl bg-stone-900 hover:bg-stone-700 disabled:bg-stone-300 text-white text-sm font-semibold transition-all"
             >
               {saving ? 'Opslaan…' : 'Recept opslaan'}
             </button>

@@ -176,10 +176,10 @@ export default function WeekPlanning() {
                           <button
                             key={liker}
                             onClick={() => toggleEater(date, liker)}
-                            className={`px-3 py-1 text-xs rounded-full border transition-all ${
+                            className={`px-3 py-1 text-xs rounded-xl font-medium transition-all ${
                               day.eaters.includes(liker)
-                                ? 'bg-stone-900 text-white border-stone-900'
-                                : 'text-stone-500 border-stone-300 hover:border-stone-900 hover:text-stone-900'
+                                ? 'bg-stone-900 text-white'
+                                : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
                             }`}
                           >
                             {liker}
