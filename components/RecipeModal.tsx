@@ -41,6 +41,7 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
   const [editIngredients, setEditIngredients] = useState(recipe.ingredients);
   const [editInstructions, setEditInstructions] = useState(recipe.instructions);
   const [editTags, setEditTags] = useState(recipe.tags);
+  const [editUrl, setEditUrl] = useState(recipe.url ?? '');
   const [editLikers, setEditLikers] = useState(
     recipe.liked_by.split(',').map((s) => s.trim()).filter(Boolean)
   );
@@ -74,6 +75,7 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
         instructions: editInstructions,
         tags: editTags,
         liked_by: editLikers.join(', '),
+        url: editUrl,
       }),
     });
     setSaving(false);
@@ -123,6 +125,19 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
             )}
             {likers.length > 0 && (
               <p className="mt-1.5 text-xs text-stone-400">♥ {likers.join(', ')}</p>
+            )}
+            {recipe.url && (
+              <a
+                href={recipe.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 mt-2 text-sm text-green-700 hover:text-green-800 font-medium"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Bekijk origineel recept
+              </a>
             )}
           </div>
           <button
@@ -259,6 +274,18 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
                   value={editTags}
                   onChange={(e) => setEditTags(e.target.value)}
                   placeholder="pasta, snel, kids"
+                  className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-stone-700 mb-1">
+                  Link naar recept <span className="text-stone-400 font-normal">(optioneel)</span>
+                </label>
+                <input
+                  type="url"
+                  value={editUrl}
+                  onChange={(e) => setEditUrl(e.target.value)}
+                  placeholder="https://www.jumbo.com/recept/..."
                   className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>

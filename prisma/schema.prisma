@@ -14,6 +14,7 @@ model Recipe {
   instructions String @default("")
   tags         String @default("")
   liked_by     String @default("")
+  url          String @default("")
   meals        Meal[]
 }
 

@@ -37,6 +37,7 @@ export async function GET(req: NextRequest) {
       instructions: r.instructions,
       tags: r.tags,
       liked_by: r.liked_by,
+      url: r.url,
       mealCount: r.meals.length,
       lastEaten: dates[0] ?? null,
     };
@@ -54,6 +55,7 @@ export async function POST(req: NextRequest) {
       instructions: body.instructions ?? '',
       tags: body.tags ?? '',
       liked_by: body.liked_by ?? '',
+      url: body.url ?? '',
     },
   });
   return NextResponse.json(recipe, { status: 201 });

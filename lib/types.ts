@@ -5,6 +5,7 @@ export interface Recipe {
   instructions: string;
   tags: string;
   liked_by: string;
+  url: string;
 }
 
 export interface RecipeWithStats extends Recipe {

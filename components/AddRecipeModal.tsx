@@ -13,6 +13,7 @@ export default function AddRecipeModal({ onClose, onAdded, allLikers }: Props) {
   const [ingredients, setIngredients] = useState('');
   const [instructions, setInstructions] = useState('');
   const [tags, setTags] = useState('');
+  const [url, setUrl] = useState('');
   const [likers, setLikers] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
 
@@ -28,6 +29,7 @@ export default function AddRecipeModal({ onClose, onAdded, allLikers }: Props) {
         ingredients,
         instructions,
         tags,
+        url,
         liked_by: likers.join(', '),
       }),
     });
@@ -118,6 +120,18 @@ export default function AddRecipeModal({ onClose, onAdded, allLikers }: Props) {
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1.5">
+              Link naar recept <span className="text-stone-400 font-normal">(optioneel)</span>
+            </label>
+            <input
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://www.jumbo.com/recept/..."
+              className="w-full rounded-xl border border-stone-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium text-stone-700 mb-1.5">Lekker voor</label>
             <LikerInput value={likers} onChange={setLikers} suggestions={allLikers} />
