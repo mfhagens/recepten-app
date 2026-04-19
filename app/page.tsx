@@ -91,7 +91,7 @@ export default function Home() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-11 pr-4 py-3 text-sm tracking-wide focus:outline-none focus:ring-1"
-              style={{ border: '1px solid #CFC5B8', backgroundColor: 'white', color: '#163247', focusRingColor: '#48656A' }}
+              style={{ border: '1px solid #CFC5B8', backgroundColor: 'white', color: '#163247' }}
             />
             {search && (
               <button
