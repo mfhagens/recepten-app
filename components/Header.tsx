@@ -14,14 +14,14 @@ export default function Header({ onAddClick }: Props) {
   }
 
   return (
-    <header className="bg-[#F5F0E8] border-b-2 border-stone-900">
+    <header className="bg-stone-900 border-b-2 border-stone-900">
       {/* Top bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-3 flex items-center justify-between gap-4">
         {/* Export */}
         <div className="relative hidden sm:block w-32">
           <button
             onClick={() => setShowExport((v) => !v)}
-            className="text-xs tracking-widest uppercase text-stone-500 hover:text-stone-900 transition-colors flex items-center gap-1"
+            className="text-xs tracking-widest uppercase text-stone-400 hover:text-white transition-colors flex items-center gap-1"
           >
             Exporteer
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -52,18 +52,18 @@ export default function Header({ onAddClick }: Props) {
 
         {/* Masthead title */}
         <div className="flex-1 text-center">
-          <h1 className="font-[var(--font-playfair)] font-bold text-stone-900 tracking-tight leading-none"
+          <h1 className="font-[var(--font-playfair)] font-bold text-white tracking-tight leading-none"
               style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}>
             Recepten
           </h1>
-          <p className="text-xs tracking-[0.25em] uppercase text-stone-500 mt-1">Hagens.org</p>
+          <p className="text-xs tracking-[0.25em] uppercase text-stone-400 mt-1">Hagens.org</p>
         </div>
 
         {/* Add button */}
         <div className="w-32 flex justify-end">
           <button
             onClick={onAddClick}
-            className="flex items-center gap-2 bg-stone-900 hover:bg-stone-700 text-white px-4 py-2 text-sm font-medium tracking-wide transition-colors"
+            className="flex items-center gap-2 bg-white hover:bg-stone-100 text-stone-900 px-4 py-2 text-sm font-medium tracking-wide transition-colors"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -75,7 +75,7 @@ export default function Header({ onAddClick }: Props) {
 
       {/* Thin decorative line */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 pb-4">
-        <div className="border-t border-stone-400" />
+        <div className="border-t border-stone-700" />
       </div>
     </header>
   );
