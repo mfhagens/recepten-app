@@ -3,7 +3,8 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(req: NextRequest) {
   const search = req.nextUrl.searchParams.get('search') ?? '';
-  const liker = req.nextUrl.searchParams.get('liker') ?? '';
+  const likersParam = req.nextUrl.searchParams.get('likers') ?? '';
+  const likers = likersParam ? likersParam.split(',').map((s) => s.trim()).filter(Boolean) : [];
 
   const recipes = await prisma.recipe.findMany({
     where: {
@@ -18,7 +19,9 @@ export async function GET(req: NextRequest) {
               ],
             }
           : {},
-        liker ? { liked_by: { contains: liker, mode: 'insensitive' } } : {},
+        ...likers.map((liker) => ({
+          liked_by: { contains: liker, mode: 'insensitive' as const },
+        })),
       ],
     },
     include: { meals: true },

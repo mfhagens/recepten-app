@@ -11,14 +11,14 @@ export default function Home() {
   const [recipes, setRecipes] = useState<RecipeWithStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [likerFilter, setLikerFilter] = useState('');
+  const [likerFilters, setLikerFilters] = useState<string[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<RecipeWithStats | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
   const fetchRecipes = useCallback(async () => {
     const params = new URLSearchParams();
     if (search) params.set('search', search);
-    if (likerFilter) params.set('liker', likerFilter);
+    if (likerFilters.length > 0) params.set('likers', likerFilters.join(','));
     const res = await fetch(`/api/recipes?${params}`);
     const data = await res.json();
     setRecipes(data);
@@ -29,7 +29,7 @@ export default function Home() {
     setLoading(true);
     const timer = setTimeout(() => fetchRecipes(), search ? 300 : 0);
     return () => clearTimeout(timer);
-  }, [fetchRecipes, search]);
+  }, [fetchRecipes, search, likerFilters]);
 
   const allLikers = Array.from(
     new Set(
@@ -38,6 +38,12 @@ export default function Home() {
         .filter(Boolean)
     )
   ).sort((a, b) => a.localeCompare(b, 'nl'));
+
+  function toggleLiker(liker: string) {
+    setLikerFilters((prev) =>
+      prev.includes(liker) ? prev.filter((l) => l !== liker) : [...prev, liker]
+    );
+  }
 
   function handleUpdated() {
     fetchRecipes();
@@ -84,25 +90,43 @@ export default function Home() {
             )}
           </div>
 
-          {/* Liker filter */}
-          <select
-            value={likerFilter}
-            onChange={(e) => setLikerFilter(e.target.value)}
-            className="sm:w-52 px-4 py-2.5 rounded-xl border border-stone-200 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm text-sm"
-          >
-            <option value="">Alle personen</option>
-            {allLikers.map((liker) => (
-              <option key={liker} value={liker}>{liker}</option>
-            ))}
-          </select>
+          {/* Liker filter chips */}
+          {allLikers.length > 0 && (
+            <div className="flex flex-wrap gap-2 items-center">
+              {allLikers.map((liker) => {
+                const active = likerFilters.includes(liker);
+                return (
+                  <button
+                    key={liker}
+                    onClick={() => toggleLiker(liker)}
+                    className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                      active
+                        ? 'bg-green-700 text-white border-green-700'
+                        : 'bg-white text-stone-600 border-stone-200 hover:border-green-400 hover:text-green-700'
+                    }`}
+                  >
+                    {active ? '✓ ' : ''}{liker}
+                  </button>
+                );
+              })}
+              {likerFilters.length > 0 && (
+                <button
+                  onClick={() => setLikerFilters([])}
+                  className="text-xs text-stone-400 hover:text-stone-600 underline"
+                >
+                  wis filter
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Results info */}
         {!loading && (
           <p className="mt-3 text-xs text-stone-400">
             {recipes.length === 0
-              ? 'Geen recepten gevonden'
-              : `${recipes.length} recept${recipes.length !== 1 ? 'en' : ''}${search || likerFilter ? ' gevonden' : ''}`}
+              ? (search || likerFilters.length > 0 ? 'Geen recepten gevonden' : 'Nog geen recepten')
+              : `${recipes.length} recept${recipes.length !== 1 ? 'en' : ''}${search || likerFilters.length > 0 ? ' gevonden' : ''}`}
           </p>
         )}
       </div>
@@ -121,7 +145,7 @@ export default function Home() {
             </h3>
             <p className="text-stone-500 text-sm">
               {search || likerFilter
-                ? 'Probeer een andere zoekterm.'
+                ? 'Probeer een andere zoekterm of selectie.'
                 : 'Voeg je eerste recept toe via de knop rechtsboven.'}
             </p>
           </div>
