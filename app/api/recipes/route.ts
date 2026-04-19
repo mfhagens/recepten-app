@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { fetchUnsplashPhoto } from '@/lib/unsplash';
 
 export async function GET(req: NextRequest) {
   const search = req.nextUrl.searchParams.get('search') ?? '';
-  const liker = req.nextUrl.searchParams.get('liker') ?? '';
+  const likersParam = req.nextUrl.searchParams.get('likers') ?? '';
+  const likers = likersParam ? likersParam.split(',').map((s) => s.trim()).filter(Boolean) : [];
 
   const recipes = await prisma.recipe.findMany({
     where: {
@@ -18,7 +20,9 @@ export async function GET(req: NextRequest) {
               ],
             }
           : {},
-        liker ? { liked_by: { contains: liker, mode: 'insensitive' } } : {},
+        ...likers.map((liker) => ({
+          liked_by: { contains: liker, mode: 'insensitive' as const },
+        })),
       ],
     },
     include: { meals: true },
@@ -34,6 +38,9 @@ export async function GET(req: NextRequest) {
       instructions: r.instructions,
       tags: r.tags,
       liked_by: r.liked_by,
+      url: r.url,
+      photo_url: r.photo_url,
+      duration: r.duration,
       mealCount: r.meals.length,
       lastEaten: dates[0] ?? null,
     };
@@ -44,6 +51,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
+  const photo_url = await fetchUnsplashPhoto(body.name);
   const recipe = await prisma.recipe.create({
     data: {
       name: body.name,
@@ -51,6 +59,9 @@ export async function POST(req: NextRequest) {
       instructions: body.instructions ?? '',
       tags: body.tags ?? '',
       liked_by: body.liked_by ?? '',
+      url: body.url ?? '',
+      photo_url,
+      duration: body.duration ?? '',
     },
   });
   return NextResponse.json(recipe, { status: 201 });

@@ -14,7 +14,11 @@ model Recipe {
   instructions String @default("")
   tags         String @default("")
   liked_by     String @default("")
+  url          String @default("")
+  photo_url    String @default("")
+  duration     String @default("")
   meals        Meal[]
+  plans        Plan[]
 }
 
 model Meal {
@@ -23,4 +27,17 @@ model Meal {
   ate_on    String
   notes     String @default("")
   recipe    Recipe @relation(fields: [recipe_id], references: [id], onDelete: Cascade)
+}
+
+model WeekCook {
+  week String @unique
+  cook String  @default("")
+}
+
+model Plan {
+  id        Int     @id @default(autoincrement())
+  date      String  @unique
+  recipe_id Int?
+  eaters    String  @default("")
+  recipe    Recipe? @relation(fields: [recipe_id], references: [id], onDelete: SetNull)
 }

@@ -41,6 +41,8 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
   const [editIngredients, setEditIngredients] = useState(recipe.ingredients);
   const [editInstructions, setEditInstructions] = useState(recipe.instructions);
   const [editTags, setEditTags] = useState(recipe.tags);
+  const [editUrl, setEditUrl] = useState(recipe.url ?? '');
+  const [editDuration, setEditDuration] = useState(recipe.duration ?? '');
   const [editLikers, setEditLikers] = useState(
     recipe.liked_by.split(',').map((s) => s.trim()).filter(Boolean)
   );
@@ -74,6 +76,8 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
         instructions: editInstructions,
         tags: editTags,
         liked_by: editLikers.join(', '),
+        url: editUrl,
+        duration: editDuration,
       }),
     });
     setSaving(false);
@@ -123,6 +127,24 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
             )}
             {likers.length > 0 && (
               <p className="mt-1.5 text-xs text-stone-400">♥ {likers.join(', ')}</p>
+            )}
+            {recipe.duration && (
+              <span className="inline-block mt-1.5 text-xs px-2 py-0.5 rounded-xl bg-[#C7EBF6] text-stone-700 border border-sky-200">
+                {recipe.duration}
+              </span>
+            )}
+            {recipe.url && (
+              <a
+                href={recipe.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 mt-2 text-sm text-green-700 hover:text-green-800 font-medium"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Bekijk origineel recept
+              </a>
             )}
           </div>
           <button
@@ -214,7 +236,7 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
               )}
               <button
                 onClick={handleLogMeal}
-                className="w-full bg-green-700 hover:bg-green-800 text-white rounded-xl py-2.5 text-sm font-medium transition-colors"
+                className="w-full bg-stone-900 hover:bg-stone-700 text-white rounded-xl py-2.5 text-sm font-semibold transition-all"
               >
                 Maaltijd loggen
               </button>
@@ -263,13 +285,44 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
                 />
               </div>
               <div>
+                <label className="block text-sm font-medium text-stone-700 mb-1">
+                  Link naar recept <span className="text-stone-400 font-normal">(optioneel)</span>
+                </label>
+                <input
+                  type="url"
+                  value={editUrl}
+                  onChange={(e) => setEditUrl(e.target.value)}
+                  placeholder="https://www.jumbo.com/recept/..."
+                  className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Bereidingstijd</label>
+                <div className="flex gap-2">
+                  {['Snel', 'Normaal', 'Lang'].map((d) => (
+                    <button
+                      key={d}
+                      type="button"
+                      onClick={() => setEditDuration(editDuration === d ? '' : d)}
+                      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                        editDuration === d
+                          ? 'bg-[#C7EBF6] text-stone-800 border-2 border-sky-600'
+                          : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
+                      }`}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1">Lekker voor</label>
                 <LikerInput value={editLikers} onChange={setEditLikers} suggestions={allLikers} />
               </div>
               <button
                 onClick={handleSaveEdit}
                 disabled={!editName.trim() || saving}
-                className="w-full bg-green-700 hover:bg-green-800 disabled:bg-stone-300 text-white rounded-xl py-2.5 text-sm font-medium transition-colors"
+                className="w-full bg-stone-900 hover:bg-stone-700 disabled:bg-stone-300 text-white rounded-xl py-2.5 text-sm font-semibold transition-all"
               >
                 {saving ? 'Opslaan…' : 'Wijzigingen opslaan'}
               </button>

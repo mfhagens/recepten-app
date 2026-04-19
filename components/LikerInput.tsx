@@ -33,53 +33,62 @@ export default function LikerInput({ value, onChange, suggestions }: Props) {
   }
 
   const filtered = suggestions.filter(
-    (s) =>
-      s.toLowerCase().includes(input.toLowerCase()) &&
-      !value.some((v) => v.toLowerCase() === s.toLowerCase())
+    (s) => !value.some((v) => v.toLowerCase() === s.toLowerCase())
   );
 
+  const filteredByInput = input
+    ? filtered.filter((s) => s.toLowerCase().includes(input.toLowerCase()))
+    : filtered;
+
   return (
-    <div className="relative">
-      <div className="min-h-[42px] w-full rounded-lg border border-stone-200 px-3 py-2 flex flex-wrap gap-1.5 focus-within:ring-2 focus-within:ring-green-500 focus-within:border-transparent bg-white cursor-text">
-        {value.map((liker) => (
-          <span
-            key={liker}
-            className="flex items-center gap-1 text-xs bg-green-50 text-green-700 border border-green-100 rounded-full px-2 py-0.5"
-          >
-            {liker}
-            <button
-              type="button"
-              onClick={() => removeLiker(liker)}
-              className="text-green-400 hover:text-green-800 font-bold leading-none"
+    <div>
+      {/* Selected likers as pills */}
+      {value.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-2">
+          {value.map((liker) => (
+            <span
+              key={liker}
+              className="flex items-center gap-1.5 text-sm bg-stone-900 text-white rounded-xl px-4 py-1.5"
             >
-              ×
-            </button>
-          </span>
-        ))}
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={value.length === 0 ? 'Naam toevoegen…' : ''}
-          className="flex-1 min-w-[120px] text-sm outline-none bg-transparent"
-        />
-      </div>
-      {input && filtered.length > 0 && (
-        <div className="absolute left-0 right-0 top-full mt-1 border border-stone-200 rounded-lg bg-white shadow-lg z-10 overflow-hidden">
-          {filtered.slice(0, 5).map((s) => (
+              {liker}
+              <button
+                type="button"
+                onClick={() => removeLiker(liker)}
+                className="text-stone-400 hover:text-white leading-none"
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Clickable suggestions */}
+      {filteredByInput.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-2">
+          {filteredByInput.map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => addLiker(s)}
-              className="w-full text-left px-3 py-2 text-sm hover:bg-stone-50 text-stone-700"
+              className="px-4 py-1.5 text-sm rounded-xl font-medium bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4] transition-all"
             >
               {s}
             </button>
           ))}
         </div>
       )}
-      <p className="text-xs text-stone-400 mt-1">Druk op Enter of komma om toe te voegen</p>
+
+      {/* Text input for custom names */}
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder="Of typ een nieuwe naam…"
+        className="w-full border border-stone-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-900 bg-white"
+      />
+      <p className="text-xs text-stone-400 mt-1 ml-1">Druk op Enter of komma om toe te voegen</p>
     </div>
   );
 }
