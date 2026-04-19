@@ -196,7 +196,7 @@ export default function WeekPlanning() {
           <div className="w-8 h-8 border-t-transparent rounded-full animate-spin" style={{ border: '2px solid #48656A' }} />
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {weekDates.map((date) => {
             const key = fmt(date);
             const day = getDay(date);
