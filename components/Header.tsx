@@ -19,38 +19,8 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
     <header className="bg-sky-700 border-b-2 border-sky-700">
       {/* Top bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-3 flex items-center justify-between gap-4">
-        {/* Export */}
-        <div className="relative hidden sm:block w-32">
-          <button
-            onClick={() => setShowExport((v) => !v)}
-            className="text-xs tracking-widest uppercase text-sky-200 hover:text-white transition-colors flex items-center gap-1"
-          >
-            Exporteer
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {showExport && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setShowExport(false)} />
-              <div className="absolute left-0 top-full mt-2 w-44 bg-white border border-stone-200 shadow-lg z-50 overflow-hidden">
-                <button
-                  onClick={() => exportCSV('recipes')}
-                  className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50"
-                >
-                  Recepten (CSV)
-                </button>
-                <div className="border-t border-stone-100" />
-                <button
-                  onClick={() => exportCSV('meals')}
-                  className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50"
-                >
-                  Maaltijden (CSV)
-                </button>
-              </div>
-            </>
-          )}
-        </div>
+        {/* Spacer left */}
+        <div className="w-32 hidden sm:block" />
 
         {/* Masthead title */}
         <div className="flex-1 text-center">
@@ -77,20 +47,55 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
 
       {/* Tab nav */}
       <div className="border-t border-sky-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 flex gap-0">
-          {(['recepten', 'planning'] as const).map((tab) => (
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
+          <div className="flex gap-0">
+            {(['recepten', 'planning'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => onTabChange(tab)}
+                className={`py-3 px-5 text-xs tracking-widest uppercase font-medium border-b-2 transition-colors ${
+                  activeTab === tab
+                    ? 'border-white text-white'
+                    : 'border-transparent text-sky-200 hover:text-white'
+                }`}
+              >
+                {tab === 'recepten' ? 'Recepten' : 'Weekplanning'}
+              </button>
+            ))}
+          </div>
+
+          {/* Export — right side of tab bar */}
+          <div className="relative hidden sm:block">
             <button
-              key={tab}
-              onClick={() => onTabChange(tab)}
-              className={`py-3 px-5 text-xs tracking-widest uppercase font-medium border-b-2 transition-colors ${
-                activeTab === tab
-                  ? 'border-white text-white'
-                  : 'border-transparent text-sky-200 hover:text-white'
-              }`}
+              onClick={() => setShowExport((v) => !v)}
+              className="text-xs tracking-widest uppercase text-sky-200 hover:text-white transition-colors flex items-center gap-1 py-3"
             >
-              {tab === 'recepten' ? 'Recepten' : 'Weekplanning'}
+              Exporteer
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
-          ))}
+            {showExport && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowExport(false)} />
+                <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-stone-200 shadow-lg z-50 overflow-hidden">
+                  <button
+                    onClick={() => exportCSV('recipes')}
+                    className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50"
+                  >
+                    Recepten (CSV)
+                  </button>
+                  <div className="border-t border-stone-100" />
+                  <button
+                    onClick={() => exportCSV('meals')}
+                    className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50"
+                  >
+                    Maaltijden (CSV)
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </header>
