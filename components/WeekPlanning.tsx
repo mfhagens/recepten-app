@@ -207,9 +207,10 @@ export default function WeekPlanning() {
                     ) : (
                       <button
                         onClick={() => setOpenDay(isOpen ? null : key)}
-                        className="w-full border-2 border-dashed border-stone-200 text-stone-400 hover:border-stone-500 hover:text-stone-600 transition-colors py-4 text-xs tracking-widest uppercase"
+                        className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#C5E8BA] hover:bg-[#B0D9A3] transition-colors text-green-800 text-xl font-light"
+                        title="Kies diner"
                       >
-                        + Kies diner
+                        +
                       </button>
                     )}
 
