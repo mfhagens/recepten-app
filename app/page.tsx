@@ -62,7 +62,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen" style={{ backgroundColor: '#F7F4EE' }}>
       <Header
         onAddClick={() => setShowAddModal(true)}
         activeTab={activeTab}
@@ -90,7 +90,8 @@ export default function Home() {
               placeholder="Zoek op naam, ingrediënt of tag…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 border border-stone-300 bg-white text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900 text-sm tracking-wide"
+              className="w-full pl-11 pr-4 py-3 text-sm tracking-wide focus:outline-none focus:ring-1"
+              style={{ border: '1px solid #CFC5B8', backgroundColor: 'white', color: '#163247' }}
             />
             {search && (
               <button
@@ -107,18 +108,17 @@ export default function Home() {
           {/* Liker filter chips */}
           {allLikers.length > 0 && (
             <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-xs tracking-widest uppercase text-stone-400 mr-1">Voor:</span>
+              <span className="text-xs tracking-widest uppercase mr-1" style={{ color: '#8A8176' }}>Voor:</span>
               {allLikers.map((liker) => {
                 const active = likerFilters.includes(liker);
                 return (
                   <button
                     key={liker}
                     onClick={() => toggleLiker(liker)}
-                    className={`px-4 py-1.5 text-sm rounded-xl font-medium transition-all ${
-                      active
-                        ? 'bg-stone-900 text-white'
-                        : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
-                    }`}
+                    className="px-4 py-1.5 text-sm rounded-xl font-medium transition-all"
+                    style={active
+                      ? { backgroundColor: '#E8F0F0', color: '#26424B', border: '1.5px solid #48656A' }
+                      : { backgroundColor: '#E5DED2', color: '#8A8176', border: '1px solid transparent' }}
                   >
                     {active ? '✓ ' : ''}{liker}
                   </button>
@@ -127,7 +127,8 @@ export default function Home() {
               {likerFilters.length > 0 && (
                 <button
                   onClick={() => setLikerFilters([])}
-                  className="text-xs text-stone-400 hover:text-stone-600 underline tracking-wide"
+                  className="text-xs underline tracking-wide"
+                  style={{ color: '#8A8176' }}
                 >
                   wis filter
                 </button>

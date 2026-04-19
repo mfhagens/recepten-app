@@ -142,46 +142,48 @@ export default function WeekPlanning() {
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={() => setWeekStart((d) => addDays(d, -7))}
-          className="flex items-center gap-1.5 text-sm text-stone-500 hover:text-stone-900 transition-colors"
+          className="flex items-center gap-1.5 text-sm transition-colors"
+          style={{ color: '#7F776E' }}
         >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
           Vorige week
         </button>
         <div className="text-center">
-          <h2 className="font-[var(--font-playfair)] font-bold text-stone-900">{weekLabel}</h2>
+          <h2 className="font-[var(--font-playfair)] font-semibold" style={{ color: '#1F2430' }}>{weekLabel}</h2>
           <button
             onClick={() => setWeekStart(getWeekStart(new Date()))}
-            className="text-xs tracking-widest uppercase text-stone-400 hover:text-stone-700 transition-colors"
+            className="text-xs tracking-widest uppercase transition-colors"
+            style={{ color: '#A09588' }}
           >
             Naar deze week
           </button>
         </div>
         <button
           onClick={() => setWeekStart((d) => addDays(d, 7))}
-          className="flex items-center gap-1.5 text-sm text-stone-500 hover:text-stone-900 transition-colors"
+          className="flex items-center gap-1.5 text-sm transition-colors"
+          style={{ color: '#7F776E' }}
         >
           Volgende week
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
 
       {/* Kookweek */}
-      <div className="flex items-center gap-3 mb-6 px-4 py-3 rounded-xl" style={{ backgroundColor: '#FEFCE8' }}>
-        <span className="text-xs tracking-widest uppercase text-stone-500 shrink-0">Kookweek van:</span>
+      <div className="flex items-center gap-3 mb-6 px-4 py-3 rounded-xl" style={{ backgroundColor: '#ECE6D8' }}>
+        <span className="text-xs tracking-widest uppercase shrink-0" style={{ color: '#8B8175' }}>Kookweek van:</span>
         <div className="flex gap-2">
-          {['Sara', 'Martijn', 'Job'].map((name) => (
+          {['Sara', 'Martijn', 'Job', 'Karlijn'].map((name) => (
             <button
               key={name}
               onClick={() => saveWeekCook(name)}
-              className={`px-3 py-1 text-sm rounded-xl font-medium transition-all ${
-                weekCook === name
-                  ? 'bg-[#C7EBF6] text-stone-800 border-2 border-sky-600'
-                  : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
-              }`}
+              className="px-3 py-1 text-sm rounded-xl font-medium transition-all"
+              style={weekCook === name
+                ? { backgroundColor: '#F7F4EE', color: '#163247', border: '1.5px solid #48656A' }
+                : { backgroundColor: '#DDCFBA', color: '#5C5245', border: '1px solid transparent' }}
             >
               {name}
             </button>
@@ -191,7 +193,7 @@ export default function WeekPlanning() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-2 border-stone-900 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-t-transparent rounded-full animate-spin" style={{ border: '2px solid #48656A' }} />
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
@@ -208,14 +210,22 @@ export default function WeekPlanning() {
             return (
               <div
                 key={key}
-                className={`bg-white flex flex-col border-2 ${isToday ? 'border-pink-400' : 'border-stone-200'}`}
+                className="flex flex-col"
+                style={isToday
+                  ? { backgroundColor: '#EEF2F1', border: '1.5px solid #48656A' }
+                  : { backgroundColor: '#F7F4EE', border: '1px solid #D8D0C4' }}
               >
                 {/* Day header */}
-                <div className={`px-3 py-2.5 ${isToday ? 'bg-pink-400' : 'bg-stone-50 border-b border-stone-200'}`}>
-                  <p className={`text-xs tracking-widest uppercase font-medium ${isToday ? 'text-pink-100' : 'text-stone-400'}`}>
+                <div className="px-3 py-2.5"
+                  style={isToday
+                    ? { backgroundColor: '#D9C7AF', borderBottom: '1px solid #C9B49A' }
+                    : { backgroundColor: 'transparent', borderBottom: '1px solid #E5DED2' }}>
+                  <p className="text-xs tracking-widest uppercase font-medium"
+                    style={{ color: isToday ? '#163247' : '#A19588' }}>
                     {DAYS_NL[date.getDay()]}
                   </p>
-                  <p className={`font-[var(--font-playfair)] font-bold text-lg leading-tight ${isToday ? 'text-white' : 'text-stone-900'}`}>
+                  <p className="font-[var(--font-playfair)] font-semibold text-lg leading-tight"
+                    style={{ color: '#1E2430' }}>
                     {date.getDate()} {MONTHS_NL[date.getMonth()]}
                   </p>
                 </div>
@@ -223,17 +233,16 @@ export default function WeekPlanning() {
                 <div className="p-3 flex flex-col gap-3 flex-1">
                   {/* Eaters */}
                   <div>
-                    <p className="text-xs tracking-widest uppercase text-stone-400 mb-1.5">Wie eet mee?</p>
+                    <p className="text-xs tracking-widest uppercase mb-1.5" style={{ color: '#8A8176' }}>Wie eet mee?</p>
                     <div className="flex flex-wrap gap-1 items-center">
                       {allLikers.map((liker) => (
                         <button
                           key={liker}
                           onClick={() => toggleEater(date, liker)}
-                          className={`px-3 py-1 text-xs rounded-xl font-medium transition-all ${
-                            day.eaters.includes(liker)
-                              ? 'bg-[#C7EBF6] text-stone-800 border-2 border-sky-600'
-                              : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
-                          }`}
+                          className="px-3 py-1 text-xs rounded-xl font-medium transition-all"
+                          style={day.eaters.includes(liker)
+                            ? { backgroundColor: '#E8F0F0', color: '#26424B', border: '1.5px solid #5B7A82' }
+                            : { backgroundColor: '#E5DED2', color: '#8A8176', border: '1px solid transparent' }}
                         >
                           {liker}
                         </button>
@@ -242,16 +251,14 @@ export default function WeekPlanning() {
                       {guestEaters.map((guest) => (
                         <span
                           key={guest}
-                          className="flex items-center gap-1 px-3 py-1 text-xs rounded-xl font-medium bg-[#C7EBF6] text-stone-800"
+                          className="flex items-center gap-1 px-3 py-1 text-xs rounded-xl font-medium"
+                          style={{ backgroundColor: '#E8F0F0', color: '#26424B', border: '1.5px solid #5B7A82' }}
                         >
                           {guest}
-                          <button
-                            onClick={() => toggleEater(date, guest)}
-                            className="text-stone-500 hover:text-stone-800 leading-none"
-                          >×</button>
+                          <button onClick={() => toggleEater(date, guest)} className="leading-none" style={{ color: '#5B7A82' }}>×</button>
                         </span>
                       ))}
-                      {/* Guest toggle: inline "+" or input */}
+                      {/* Guest toggle */}
                       {isGuestOpen ? (
                         <input
                           ref={guestInputRef}
@@ -264,12 +271,14 @@ export default function WeekPlanning() {
                             if (e.key === 'Escape') setGuestOpenDay(null);
                           }}
                           onBlur={() => { if (!(guestInputs[key] ?? '').trim()) setGuestOpenDay(null); }}
-                          className="w-24 text-xs border border-stone-300 rounded-xl px-2 py-1 focus:outline-none focus:border-sky-400"
+                          className="w-24 text-xs rounded-xl px-2 py-1 focus:outline-none"
+                          style={{ border: '1px solid #CFC5B8', backgroundColor: 'white', color: '#163247' }}
                         />
                       ) : (
                         <button
                           onClick={() => setGuestOpenDay(key)}
-                          className="px-2 py-1 text-xs rounded-xl text-stone-400 hover:text-stone-600 hover:bg-stone-100 transition-all"
+                          className="px-2 py-1 text-xs rounded-xl transition-all"
+                          style={{ color: '#9A9186' }}
                           title="Gast toevoegen"
                         >
                           + gast
@@ -281,17 +290,19 @@ export default function WeekPlanning() {
                   {/* Planned recipe */}
                   <div className="flex-1 flex flex-col gap-2">
                     {planned ? (
-                      <div className="bg-stone-50 border border-stone-200 p-2.5">
-                        <p className="text-xs tracking-widest uppercase text-stone-400 mb-1">Diner</p>
+                      <div className="p-2.5" style={{ backgroundColor: '#FBF8F3', border: '1px solid #DDD5C8' }}>
+                        <p className="text-xs tracking-widest uppercase mb-1" style={{ color: '#A09588' }}>Diner</p>
                         <button
                           onClick={() => setSelectedRecipe(planned)}
-                          className="font-[var(--font-playfair)] font-bold text-sm text-stone-900 leading-snug hover:text-sky-700 transition-colors text-left w-full"
+                          className="font-[var(--font-playfair)] font-semibold text-sm leading-snug transition-colors text-left w-full"
+                          style={{ color: '#1E2430' }}
                         >
                           {planned.name}
                         </button>
                         <button
                           onClick={() => setOpenDay(isOpen ? null : key)}
-                          className="text-xs text-stone-400 hover:text-stone-700 mt-1.5 underline"
+                          className="text-xs mt-1.5 underline"
+                          style={{ color: '#8A8176' }}
                         >
                           Wijzigen
                         </button>
@@ -299,7 +310,8 @@ export default function WeekPlanning() {
                     ) : (
                       <button
                         onClick={() => setOpenDay(isOpen ? null : key)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#C5E8BA] hover:bg-[#B0D9A3] transition-colors text-green-800 text-xs font-medium"
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors"
+                        style={{ backgroundColor: '#B8CFAF', color: '#27412D', borderRadius: '10px' }}
                       >
                         <span className="text-base leading-none">+</span> Kies diner
                       </button>
@@ -314,37 +326,34 @@ export default function WeekPlanning() {
                             <button
                               key={d}
                               onClick={() => setPickerDurationFilter(pickerDurationFilter === d ? '' : d)}
-                              className={`px-2 py-0.5 text-xs rounded-lg font-medium transition-all ${
-                                pickerDurationFilter === d
-                                  ? 'bg-[#C7EBF6] text-stone-800 border-2 border-sky-600'
-                                  : 'bg-[#E8D9C6] text-stone-800 hover:bg-[#D9C9B4]'
-                              }`}
+                              className="px-2 py-0.5 text-xs rounded-lg font-medium transition-all"
+                              style={pickerDurationFilter === d
+                                ? { backgroundColor: '#E8F0F0', color: '#26424B', border: '1.5px solid #48656A' }
+                                : { backgroundColor: '#E5DED2', color: '#8A8176', border: '1px solid transparent' }}
                             >
                               {d}
                             </button>
                           ))}
                         </div>
                         {suggestions.filter(r => !pickerDurationFilter || r.duration === pickerDurationFilter).length === 0 && (
-                          <p className="text-xs text-stone-400 italic">
-                            Geen recepten gevonden.
-                          </p>
+                          <p className="text-xs italic" style={{ color: '#A09588' }}>Geen recepten gevonden.</p>
                         )}
                         {suggestions.filter(r => !pickerDurationFilter || r.duration === pickerDurationFilter).map((r) => (
                           <button
                             key={r.id}
                             onClick={() => { saveDay(date, { recipe_id: r.id }); setOpenDay(null); }}
-                            className={`w-full text-left px-3 py-2.5 text-sm border transition-colors ${
-                              day.recipe_id === r.id
-                                ? 'bg-[#C7EBF6] text-stone-800 border-sky-200'
-                                : 'bg-white border-stone-200 text-stone-700 hover:border-stone-900 hover:bg-stone-50'
-                            }`}
+                            className="w-full text-left px-3 py-2.5 text-sm transition-colors"
+                            style={day.recipe_id === r.id
+                              ? { backgroundColor: '#E8F0F0', color: '#163247', border: '1px solid #5B7A82' }
+                              : { backgroundColor: 'white', color: '#48656A', border: '1px solid #D8D0C4' }}
                           >
-                            <span className="font-[var(--font-playfair)] font-bold">{r.name}</span>
+                            <span className="font-[var(--font-playfair)] font-semibold">{r.name}</span>
                           </button>
                         ))}
                         <button
                           onClick={() => { setAddForDate(date); setShowAddModal(true); setOpenDay(null); }}
-                          className="w-full text-left px-3 py-2.5 text-xs tracking-widest uppercase border border-dashed border-stone-300 text-stone-400 hover:border-stone-700 hover:text-stone-700 transition-colors"
+                          className="w-full text-left px-3 py-2.5 text-xs tracking-widest uppercase transition-colors"
+                          style={{ border: '1px dashed #CFC5B8', color: '#A09588' }}
                         >
                           + Nieuw recept toevoegen
                         </button>

@@ -2,8 +2,8 @@
 import type { RecipeWithStats } from '@/lib/types';
 
 const CARD_COLORS = [
-  '#BAE6FD', '#BBF7D0', '#FEF08A', '#FBCFE8',
-  '#99F6E4', '#DDD6FE', '#FED7AA', '#FECDD3',
+  '#E8E0D4', '#DDE5DC', '#EAE0D0', '#E2DDE8',
+  '#D8E4DE', '#E5DDD4', '#DCE4E2', '#E4DDD5',
 ];
 
 const FOOD_EMOJIS = [
@@ -25,7 +25,8 @@ export default function RecipeCard({ recipe, onClick }: Props) {
   return (
     <button
       onClick={onClick}
-      className="w-full text-left bg-white group cursor-pointer overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300 border border-stone-200"
+      className="w-full text-left group cursor-pointer overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-300"
+      style={{ backgroundColor: '#F7F4EE', border: '1px solid #CFC5B8' }}
     >
       {/* Photo or color block */}
       <div className="relative overflow-hidden" style={{ height: '160px' }}>
@@ -36,21 +37,18 @@ export default function RecipeCard({ recipe, onClick }: Props) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div
-            className="w-full h-full flex items-center justify-center"
-            style={{ backgroundColor: cardColor }}
-          >
+          <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: cardColor }}>
             <span
               className="text-5xl group-hover:scale-110 transition-transform duration-300 select-none"
-              style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.15))' }}
+              style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.10))' }}
             >
               {emoji}
             </span>
           </div>
         )}
         {recipe.url && (
-          <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1">
-            <svg className="w-3 h-3 text-stone-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="absolute top-2 right-2 rounded-full p-1" style={{ backgroundColor: 'rgba(247,244,238,0.85)' }}>
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#48656A' }}>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
             </svg>
           </div>
@@ -59,16 +57,16 @@ export default function RecipeCard({ recipe, onClick }: Props) {
 
       {/* Content */}
       <div className="p-4 flex flex-col flex-1">
-        <h2 className="font-[var(--font-playfair)] font-bold text-stone-900 leading-tight group-hover:text-stone-600 transition-colors flex-1"
-            style={{ fontSize: '1.15rem' }}>
+        <h2 className="font-[var(--font-playfair)] font-semibold leading-tight flex-1 transition-colors"
+            style={{ fontSize: '1.15rem', color: '#163247' }}>
           {recipe.name}
         </h2>
 
-        <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between">
-          <span className="text-xs text-stone-400 truncate">
+        <div className="mt-3 pt-3 flex items-center justify-between" style={{ borderTop: '1px solid #E5DED2' }}>
+          <span className="text-xs truncate" style={{ color: '#8A8176' }}>
             {likers.length > 0 ? `♥ ${likers.join(', ')}` : ''}
           </span>
-          <span className="text-xs text-stone-400 shrink-0 ml-2 tabular-nums">
+          <span className="text-xs shrink-0 ml-2 tabular-nums" style={{ color: '#8A8176' }}>
             {recipe.mealCount > 0 ? `${recipe.mealCount}×` : ''}
           </span>
         </div>
