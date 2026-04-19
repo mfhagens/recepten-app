@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   onAddClick: () => void;
@@ -9,18 +10,33 @@ interface Props {
 
 export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
   const [showExport, setShowExport] = useState(false);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch('/api/auth/me').then((r) => r.json()).then((d) => setCurrentUser(d.name ?? null));
+  }, []);
 
   function exportCSV(table: string) {
     window.location.href = `/api/export?table=${table}`;
     setShowExport(false);
   }
 
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/login');
+  }
+
   return (
     <header className="bg-sky-700 border-b-2 border-sky-700">
       {/* Top bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-3 flex items-center justify-between gap-4">
-        {/* Spacer left */}
-        <div className="w-32 hidden sm:block" />
+        {/* Left: current user */}
+        <div className="w-32 hidden sm:flex items-center gap-2">
+          {currentUser && (
+            <span className="text-xs text-sky-200 tracking-wide">👤 {currentUser}</span>
+          )}
+        </div>
 
         {/* Masthead title */}
         <div className="flex-1 text-center">
@@ -31,7 +47,7 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
           <p className="text-xs tracking-[0.25em] uppercase text-sky-200 mt-1">Hagens.org</p>
         </div>
 
-        {/* Add button */}
+        {/* Right: Nieuw button */}
         <div className="w-32 flex justify-end">
           <button
             onClick={onAddClick}
@@ -64,37 +80,46 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
             ))}
           </div>
 
-          {/* Export — right side of tab bar */}
-          <div className="relative hidden sm:block">
+          {/* Right side: Export + Uitloggen */}
+          <div className="flex items-center gap-4">
+            <div className="relative hidden sm:block">
+              <button
+                onClick={() => setShowExport((v) => !v)}
+                className="text-xs tracking-widest uppercase text-sky-200 hover:text-white transition-colors flex items-center gap-1 py-3"
+              >
+                Exporteer
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {showExport && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowExport(false)} />
+                  <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-stone-200 shadow-lg z-50 overflow-hidden">
+                    <button
+                      onClick={() => exportCSV('recipes')}
+                      className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50"
+                    >
+                      Recepten (CSV)
+                    </button>
+                    <div className="border-t border-stone-100" />
+                    <button
+                      onClick={() => exportCSV('meals')}
+                      className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50"
+                    >
+                      Maaltijden (CSV)
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
             <button
-              onClick={() => setShowExport((v) => !v)}
-              className="text-xs tracking-widest uppercase text-sky-200 hover:text-white transition-colors flex items-center gap-1 py-3"
+              onClick={handleLogout}
+              className="text-xs tracking-widest uppercase text-sky-200 hover:text-white transition-colors py-3"
             >
-              Exporteer
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
+              Uitloggen
             </button>
-            {showExport && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setShowExport(false)} />
-                <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-stone-200 shadow-lg z-50 overflow-hidden">
-                  <button
-                    onClick={() => exportCSV('recipes')}
-                    className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50"
-                  >
-                    Recepten (CSV)
-                  </button>
-                  <div className="border-t border-stone-100" />
-                  <button
-                    onClick={() => exportCSV('meals')}
-                    className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50"
-                  >
-                    Maaltijden (CSV)
-                  </button>
-                </div>
-              </>
-            )}
           </div>
         </div>
       </div>
