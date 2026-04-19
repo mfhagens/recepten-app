@@ -32,6 +32,8 @@ model WeekCook {
   week String @unique
   cook String  @default("")
 }
+
+model Plan {
   id        Int     @id @default(autoincrement())
   date      String  @unique
   recipe_id Int?
