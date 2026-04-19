@@ -16,6 +16,7 @@ model Recipe {
   liked_by     String @default("")
   url          String @default("")
   meals        Meal[]
+  plans        Plan[]
 }
 
 model Meal {
