@@ -56,13 +56,6 @@ export default function RecipeCard({ recipe, onClick }: Props) {
 
       {/* Content */}
       <div className="p-4 flex flex-col flex-1 relative">
-        {/* Tags */}
-        {tags.length > 0 && (
-          <p className="text-xs tracking-widest uppercase text-stone-400 mb-2 truncate">
-            {tags.join(' · ')}
-          </p>
-        )}
-
         {/* Title */}
         <h2 className="font-[var(--font-playfair)] font-bold text-stone-900 leading-tight group-hover:text-stone-600 transition-colors flex-1"
             style={{ fontSize: '1.15rem' }}>
