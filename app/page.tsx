@@ -58,7 +58,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F5F0E8]">
+    <main className="min-h-screen bg-[#EAF5FA]">
       <Header
         onAddClick={() => setShowAddModal(true)}
         activeTab={activeTab}

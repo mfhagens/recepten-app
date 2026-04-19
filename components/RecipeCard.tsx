@@ -2,14 +2,14 @@
 import type { RecipeWithStats } from '@/lib/types';
 
 const CARD_COLORS = [
-  '#8B9B7A', // sage
-  '#C47A5A', // terracotta
-  '#7A8B9B', // slate
-  '#9B8B6A', // caramel
-  '#7A9B8B', // teal sage
-  '#A07A8B', // dusty mauve
-  '#8B7A5A', // warm brown
-  '#6A8B7A', // forest mint
+  '#BAE6FD', // sky blue
+  '#BBF7D0', // mint green
+  '#FEF08A', // sunny yellow
+  '#FBCFE8', // soft pink
+  '#99F6E4', // teal mint
+  '#DDD6FE', // lavender
+  '#FED7AA', // soft peach
+  '#FECDD3', // rose pink
 ];
 
 const FOOD_EMOJIS = [
