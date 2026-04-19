@@ -17,6 +17,10 @@ export default function Home() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'recepten' | 'planning'>('recepten');
 
+  useEffect(() => {
+    fetch('/api/photos/backfill', { method: 'POST' });
+  }, []);
+
   const fetchRecipes = useCallback(async () => {
     const params = new URLSearchParams();
     if (search) params.set('search', search);

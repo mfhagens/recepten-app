@@ -6,6 +6,7 @@ export interface Recipe {
   tags: string;
   liked_by: string;
   url: string;
+  photo_url: string;
 }
 
 export interface RecipeWithStats extends Recipe {
