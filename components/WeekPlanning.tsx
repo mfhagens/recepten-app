@@ -179,7 +179,7 @@ export default function WeekPlanning() {
               onClick={() => saveWeekCook(name)}
               className={`px-3 py-1 text-sm rounded-xl font-medium transition-all ${
                 weekCook === name
-                  ? 'bg-[#C7EBF6] text-stone-800'
+                  ? 'bg-[#C7EBF6] text-stone-800 border-2 border-sky-600'
                   : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
               }`}
             >
@@ -208,11 +208,11 @@ export default function WeekPlanning() {
             return (
               <div
                 key={key}
-                className={`bg-white flex flex-col border-2 ${isToday ? 'border-stone-900' : 'border-stone-200'}`}
+                className={`bg-white flex flex-col border-2 ${isToday ? 'border-pink-400' : 'border-stone-200'}`}
               >
                 {/* Day header */}
-                <div className={`px-3 py-2.5 ${isToday ? 'bg-stone-900' : 'bg-stone-50 border-b border-stone-200'}`}>
-                  <p className={`text-xs tracking-widest uppercase font-medium ${isToday ? 'text-stone-400' : 'text-stone-400'}`}>
+                <div className={`px-3 py-2.5 ${isToday ? 'bg-pink-400' : 'bg-stone-50 border-b border-stone-200'}`}>
+                  <p className={`text-xs tracking-widest uppercase font-medium ${isToday ? 'text-pink-100' : 'text-stone-400'}`}>
                     {DAYS_NL[date.getDay()]}
                   </p>
                   <p className={`font-[var(--font-playfair)] font-bold text-lg leading-tight ${isToday ? 'text-white' : 'text-stone-900'}`}>
