@@ -25,3 +25,11 @@ model Meal {
   notes     String @default("")
   recipe    Recipe @relation(fields: [recipe_id], references: [id], onDelete: Cascade)
 }
+
+model Plan {
+  id        Int     @id @default(autoincrement())
+  date      String  @unique
+  recipe_id Int?
+  eaters    String  @default("")
+  recipe    Recipe? @relation(fields: [recipe_id], references: [id], onDelete: SetNull)
+}

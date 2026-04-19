@@ -19,3 +19,10 @@ export interface Meal {
   ate_on: string;
   notes: string;
 }
+
+export interface Plan {
+  id: number;
+  date: string;
+  recipe_id: number | null;
+  eaters: string;
+}

@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import RecipeCard from '@/components/RecipeCard';
 import RecipeModal from '@/components/RecipeModal';
 import AddRecipeModal from '@/components/AddRecipeModal';
+import WeekPlanning from '@/components/WeekPlanning';
 import type { RecipeWithStats } from '@/lib/types';
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
   const [likerFilters, setLikerFilters] = useState<string[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<RecipeWithStats | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [activeTab, setActiveTab] = useState<'recepten' | 'planning'>('recepten');
 
   const fetchRecipes = useCallback(async () => {
     const params = new URLSearchParams();
@@ -59,7 +61,30 @@ export default function Home() {
     <main className="min-h-screen bg-[#F5F0E8]">
       <Header onAddClick={() => setShowAddModal(true)} />
 
+      {/* Tabs */}
+      <div className="border-b border-stone-200 bg-[#F5F0E8]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 flex gap-0">
+          {(['recepten', 'planning'] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`py-3 px-5 text-xs tracking-widest uppercase font-medium border-b-2 transition-colors ${
+                activeTab === tab
+                  ? 'border-stone-900 text-stone-900'
+                  : 'border-transparent text-stone-400 hover:text-stone-700'
+              }`}
+            >
+              {tab === 'recepten' ? 'Recepten' : 'Weekplanning'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Weekplanning tab */}
+      {activeTab === 'planning' && <WeekPlanning />}
+
       {/* Search & Filter bar */}
+      {activeTab === 'recepten' && <>
       <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-4">
         <div className="flex flex-col gap-4">
           {/* Search */}
@@ -162,6 +187,7 @@ export default function Home() {
           </div>
         )}
       </div>
+      </>}
 
       {/* Modals */}
       {selectedRecipe && (
