@@ -21,7 +21,7 @@ function addDays(date: Date, days: number): Date {
 }
 
 function fmt(date: Date): string {
-  return date.toISOString().split('T')[0];
+  return date.toLocaleDateString('en-CA', { timeZone: 'Europe/Amsterdam' });
 }
 
 interface DayState {
@@ -176,7 +176,7 @@ export default function WeekPlanning() {
       <div className="flex items-center gap-3 mb-6 px-4 py-3 rounded-xl" style={{ backgroundColor: '#ECE6D8' }}>
         <span className="text-xs tracking-widest uppercase shrink-0" style={{ color: '#8B8175' }}>Kookweek van:</span>
         <div className="flex gap-2">
-          {['Sara', 'Martijn', 'Job', 'Karlijn'].map((name) => (
+          {['Sara', 'Martijn', 'Job'].map((name) => (
             <button
               key={name}
               onClick={() => saveWeekCook(name)}
@@ -335,21 +335,28 @@ export default function WeekPlanning() {
                             </button>
                           ))}
                         </div>
-                        {suggestions.filter(r => !pickerDurationFilter || r.duration === pickerDurationFilter).length === 0 && (
-                          <p className="text-xs italic" style={{ color: '#A09588' }}>Geen recepten gevonden.</p>
-                        )}
-                        {suggestions.filter(r => !pickerDurationFilter || r.duration === pickerDurationFilter).map((r) => (
-                          <button
-                            key={r.id}
-                            onClick={() => { saveDay(date, { recipe_id: r.id }); setOpenDay(null); }}
-                            className="w-full text-left px-3 py-2.5 text-sm transition-colors"
-                            style={day.recipe_id === r.id
-                              ? { backgroundColor: '#E8F0F0', color: '#163247', border: '1px solid #5B7A82' }
-                              : { backgroundColor: 'white', color: '#48656A', border: '1px solid #D8D0C4' }}
-                          >
-                            <span className="font-[var(--font-playfair)] font-semibold">{r.name}</span>
-                          </button>
-                        ))}
+                        {(() => {
+                          const filtered = suggestions.filter(r => !pickerDurationFilter || r.duration === pickerDurationFilter);
+                          if (filtered.length === 0) return (
+                            <p className="text-xs italic" style={{ color: '#A09588' }}>Geen recepten gevonden.</p>
+                          );
+                          return (
+                            <div className="flex flex-col gap-1 overflow-y-auto" style={{ maxHeight: '252px' }}>
+                              {filtered.map((r) => (
+                                <button
+                                  key={r.id}
+                                  onClick={() => { saveDay(date, { recipe_id: r.id }); setOpenDay(null); }}
+                                  className="w-full text-left px-3 py-2.5 text-sm transition-colors shrink-0"
+                                  style={day.recipe_id === r.id
+                                    ? { backgroundColor: '#E8F0F0', color: '#163247', border: '1px solid #5B7A82' }
+                                    : { backgroundColor: 'white', color: '#48656A', border: '1px solid #D8D0C4' }}
+                                >
+                                  <span className="font-[var(--font-playfair)] font-semibold">{r.name}</span>
+                                </button>
+                              ))}
+                            </div>
+                          );
+                        })()}
                         <button
                           onClick={() => { setAddForDate(date); setShowAddModal(true); setOpenDay(null); }}
                           className="w-full text-left px-3 py-2.5 text-xs tracking-widest uppercase transition-colors"
