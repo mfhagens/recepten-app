@@ -28,7 +28,10 @@ model Meal {
   recipe    Recipe @relation(fields: [recipe_id], references: [id], onDelete: Cascade)
 }
 
-model Plan {
+model WeekCook {
+  week String @unique
+  cook String  @default("")
+}
   id        Int     @id @default(autoincrement())
   date      String  @unique
   recipe_id Int?

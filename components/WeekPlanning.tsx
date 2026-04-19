@@ -38,14 +38,16 @@ export default function WeekPlanning() {
   const [openDay, setOpenDay] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [addForDate, setAddForDate] = useState<Date | null>(null);
+  const [weekCook, setWeekCook] = useState<string>('');
 
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [recRes, planRes] = await Promise.all([
+    const [recRes, planRes, cookRes] = await Promise.all([
       fetch('/api/recipes'),
       fetch(`/api/plan?week=${fmt(weekStart)}`),
+      fetch(`/api/weekcook/${fmt(weekStart)}`),
     ]);
     setRecipes(await recRes.json());
     const planData: { date: string; eaters: string; recipe_id: number | null }[] = await planRes.json();
@@ -57,8 +59,20 @@ export default function WeekPlanning() {
       };
     }
     setPlans(map);
+    const cookData = await cookRes.json();
+    setWeekCook(cookData.cook ?? '');
     setLoading(false);
   }, [weekStart]);
+
+  async function saveWeekCook(name: string) {
+    const cook = weekCook === name ? '' : name;
+    setWeekCook(cook);
+    await fetch(`/api/weekcook/${fmt(weekStart)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cook }),
+    });
+  }
 
   useEffect(() => { load(); }, [load]);
 
@@ -133,6 +147,26 @@ export default function WeekPlanning() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
+      </div>
+
+      {/* Kookweek */}
+      <div className="flex items-center gap-3 mb-6 px-4 py-3 rounded-xl" style={{ backgroundColor: '#FEFCE8' }}>
+        <span className="text-xs tracking-widest uppercase text-stone-500 shrink-0">Kookweek van:</span>
+        <div className="flex gap-2">
+          {['Sara', 'Martijn', 'Job'].map((name) => (
+            <button
+              key={name}
+              onClick={() => saveWeekCook(name)}
+              className={`px-3 py-1 text-sm rounded-xl font-medium transition-all ${
+                weekCook === name
+                  ? 'bg-stone-900 text-white'
+                  : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
+              }`}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
       </div>
 
       {loading ? (
