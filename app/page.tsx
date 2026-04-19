@@ -141,10 +141,10 @@ export default function Home() {
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <span className="text-6xl mb-4">🍽️</span>
             <h3 className="text-xl font-[var(--font-playfair)] font-bold text-stone-800 mb-2">
-              {search || likerFilter ? 'Geen recepten gevonden' : 'Nog geen recepten'}
+              {search || likerFilters.length > 0 ? 'Geen recepten gevonden' : 'Nog geen recepten'}
             </h3>
             <p className="text-stone-500 text-sm">
-              {search || likerFilter
+              {search || likerFilters.length > 0
                 ? 'Probeer een andere zoekterm of selectie.'
                 : 'Voeg je eerste recept toe via de knop rechtsboven.'}
             </p>
