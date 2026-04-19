@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import type { RecipeWithStats } from '@/lib/types';
+import AddRecipeModal from './AddRecipeModal';
 
 const DAYS_NL = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
 const MONTHS_NL = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
@@ -35,6 +36,8 @@ export default function WeekPlanning() {
   const [plans, setPlans] = useState<Record<string, DayState>>({});
   const [loading, setLoading] = useState(true);
   const [openDay, setOpenDay] = useState<string | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addForDate, setAddForDate] = useState<Date | null>(null);
 
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
@@ -212,34 +215,34 @@ export default function WeekPlanning() {
 
                     {/* Recipe picker */}
                     {isOpen && (
-                      <div className="border border-stone-200 bg-white shadow-lg max-h-52 overflow-y-auto">
-                        <div className="px-3 py-2 border-b border-stone-100 bg-stone-50 sticky top-0">
-                          <p className="text-xs tracking-widest uppercase text-stone-500">
-                            {day.eaters.length > 0
-                              ? `${suggestions.length} suggesties voor ${day.eaters.join(', ')}`
-                              : `Alle ${suggestions.length} recepten`}
+                      <div className="flex flex-col gap-1.5">
+                        <p className="text-xs tracking-widest uppercase text-stone-400">
+                          {day.eaters.length > 0 ? 'Suggesties' : 'Alle recepten'}
+                        </p>
+                        {suggestions.length === 0 && (
+                          <p className="text-xs text-stone-400 italic">
+                            Geen recepten die iedereen lekker vindt.
                           </p>
-                        </div>
-                        {suggestions.length === 0 ? (
-                          <p className="px-3 py-3 text-xs text-stone-400">
-                            Geen recepten die iedereen lekker vindt. Pas de selectie aan.
-                          </p>
-                        ) : (
-                          suggestions.map((r) => (
-                            <button
-                              key={r.id}
-                              onClick={() => {
-                                saveDay(date, { recipe_id: r.id });
-                                setOpenDay(null);
-                              }}
-                              className={`w-full text-left px-3 py-2.5 text-sm border-b border-stone-50 last:border-0 hover:bg-stone-50 transition-colors ${
-                                day.recipe_id === r.id ? 'font-bold text-stone-900 bg-stone-50' : 'text-stone-700'
-                              }`}
-                            >
-                              {r.name}
-                            </button>
-                          ))
                         )}
+                        {suggestions.map((r) => (
+                          <button
+                            key={r.id}
+                            onClick={() => { saveDay(date, { recipe_id: r.id }); setOpenDay(null); }}
+                            className={`w-full text-left px-3 py-2.5 text-sm border transition-colors ${
+                              day.recipe_id === r.id
+                                ? 'bg-stone-900 text-white border-stone-900'
+                                : 'bg-white border-stone-200 text-stone-700 hover:border-stone-900 hover:bg-stone-50'
+                            }`}
+                          >
+                            <span className="font-[var(--font-playfair)] font-bold">{r.name}</span>
+                          </button>
+                        ))}
+                        <button
+                          onClick={() => { setAddForDate(date); setShowAddModal(true); setOpenDay(null); }}
+                          className="w-full text-left px-3 py-2.5 text-xs tracking-widest uppercase border border-dashed border-stone-300 text-stone-400 hover:border-stone-700 hover:text-stone-700 transition-colors"
+                        >
+                          + Nieuw recept toevoegen
+                        </button>
                       </div>
                     )}
                   </div>
@@ -248,6 +251,24 @@ export default function WeekPlanning() {
             );
           })}
         </div>
+      )}
+      {showAddModal && (
+        <AddRecipeModal
+          onClose={() => { setShowAddModal(false); setAddForDate(null); }}
+          onAdded={async () => {
+            setShowAddModal(false);
+            await load();
+            // Auto-select the newly added recipe (last in list) for the planned date
+            if (addForDate) {
+              const res = await fetch('/api/recipes');
+              const all: RecipeWithStats[] = await res.json();
+              const newest = all[all.length - 1];
+              if (newest) saveDay(addForDate, { recipe_id: newest.id });
+            }
+            setAddForDate(null);
+          }}
+          allLikers={allLikers}
+        />
       )}
     </div>
   );
