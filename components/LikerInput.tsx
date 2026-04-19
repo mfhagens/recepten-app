@@ -33,10 +33,12 @@ export default function LikerInput({ value, onChange, suggestions }: Props) {
   }
 
   const filtered = suggestions.filter(
-    (s) =>
-      s.toLowerCase().includes(input.toLowerCase()) &&
-      !value.some((v) => v.toLowerCase() === s.toLowerCase())
+    (s) => !value.some((v) => v.toLowerCase() === s.toLowerCase())
   );
+
+  const filteredByInput = input
+    ? filtered.filter((s) => s.toLowerCase().includes(input.toLowerCase()))
+    : filtered;
 
   return (
     <div className="relative">
@@ -65,14 +67,14 @@ export default function LikerInput({ value, onChange, suggestions }: Props) {
           className="flex-1 min-w-[120px] text-sm outline-none bg-transparent"
         />
       </div>
-      {input && filtered.length > 0 && (
-        <div className="absolute left-0 right-0 top-full mt-1 border border-stone-200 rounded-lg bg-white shadow-lg z-10 overflow-hidden">
-          {filtered.slice(0, 5).map((s) => (
+      {filteredByInput.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mt-2">
+          {filteredByInput.map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => addLiker(s)}
-              className="w-full text-left px-3 py-2 text-sm hover:bg-stone-50 text-stone-700"
+              className="px-3 py-1 text-sm border border-stone-300 text-stone-600 hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-colors"
             >
               {s}
             </button>
