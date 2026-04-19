@@ -1,14 +1,15 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { RecipeWithStats } from '@/lib/types';
 import AddRecipeModal from './AddRecipeModal';
+import RecipeModal from './RecipeModal';
 
 const DAYS_NL = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'];
 const MONTHS_NL = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
 
 function getWeekStart(date: Date): Date {
   const d = new Date(date);
-  d.setDate(d.getDate() - d.getDay()); // Sunday = 0
+  d.setDate(d.getDate() - d.getDay());
   d.setHours(0, 0, 0, 0);
   return d;
 }
@@ -38,6 +39,9 @@ export default function WeekPlanning() {
   const [addForDate, setAddForDate] = useState<Date | null>(null);
   const [weekCook, setWeekCook] = useState<string>('');
   const [guestInputs, setGuestInputs] = useState<Record<string, string>>({});
+  const [guestOpenDay, setGuestOpenDay] = useState<string | null>(null);
+  const [selectedRecipe, setSelectedRecipe] = useState<RecipeWithStats | null>(null);
+  const guestInputRef = useRef<HTMLInputElement>(null);
 
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
@@ -75,6 +79,11 @@ export default function WeekPlanning() {
 
   useEffect(() => { load(); }, [load]);
 
+  // Auto-focus guest input when opened
+  useEffect(() => {
+    if (guestOpenDay) setTimeout(() => guestInputRef.current?.focus(), 50);
+  }, [guestOpenDay]);
+
   const allLikers = Array.from(
     new Set(recipes.flatMap((r) => r.liked_by.split(',').map((s) => s.trim()).filter(Boolean)))
   ).sort();
@@ -111,6 +120,7 @@ export default function WeekPlanning() {
       saveDay(date, { eaters: [...day.eaters, name] });
     }
     setGuestInputs((prev) => ({ ...prev, [key]: '' }));
+    setGuestOpenDay(null);
   }
 
   function getSuggestions(eaters: string[]): RecipeWithStats[] {
@@ -168,7 +178,7 @@ export default function WeekPlanning() {
               onClick={() => saveWeekCook(name)}
               className={`px-3 py-1 text-sm rounded-xl font-medium transition-all ${
                 weekCook === name
-                  ? 'bg-stone-900 text-white'
+                  ? 'bg-[#C7EBF6] text-stone-800'
                   : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
               }`}
             >
@@ -184,7 +194,7 @@ export default function WeekPlanning() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
-          {weekDates.map((date, i) => {
+          {weekDates.map((date) => {
             const key = fmt(date);
             const day = getDay(date);
             const isToday = key === today;
@@ -192,6 +202,7 @@ export default function WeekPlanning() {
             const planned = recipes.find((r) => r.id === day.recipe_id) ?? null;
             const isOpen = openDay === key;
             const guestEaters = day.eaters.filter((e) => !allLikers.includes(e));
+            const isGuestOpen = guestOpenDay === key;
 
             return (
               <div
@@ -212,14 +223,14 @@ export default function WeekPlanning() {
                   {/* Eaters */}
                   <div>
                     <p className="text-xs tracking-widest uppercase text-stone-400 mb-1.5">Wie eet mee?</p>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 items-center">
                       {allLikers.map((liker) => (
                         <button
                           key={liker}
                           onClick={() => toggleEater(date, liker)}
                           className={`px-3 py-1 text-xs rounded-xl font-medium transition-all ${
                             day.eaters.includes(liker)
-                              ? 'bg-stone-900 text-white'
+                              ? 'bg-[#C7EBF6] text-stone-800'
                               : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
                           }`}
                         >
@@ -230,32 +241,37 @@ export default function WeekPlanning() {
                       {guestEaters.map((guest) => (
                         <span
                           key={guest}
-                          className="flex items-center gap-1 px-3 py-1 text-xs rounded-xl font-medium bg-sky-100 text-sky-800"
+                          className="flex items-center gap-1 px-3 py-1 text-xs rounded-xl font-medium bg-[#C7EBF6] text-stone-800"
                         >
                           {guest}
                           <button
                             onClick={() => toggleEater(date, guest)}
-                            className="text-sky-500 hover:text-sky-800 leading-none"
+                            className="text-stone-500 hover:text-stone-800 leading-none"
                           >×</button>
                         </span>
                       ))}
-                    </div>
-                    {/* Guest input */}
-                    <div className="flex gap-1 mt-1.5">
-                      <input
-                        type="text"
-                        placeholder="+ Gast toevoegen"
-                        value={guestInputs[key] ?? ''}
-                        onChange={(e) => setGuestInputs((prev) => ({ ...prev, [key]: e.target.value }))}
-                        onKeyDown={(e) => { if (e.key === 'Enter') addGuest(date, key); }}
-                        className="flex-1 text-xs border border-stone-200 rounded-lg px-2 py-1 focus:outline-none focus:border-stone-400 placeholder-stone-300"
-                      />
-                      {(guestInputs[key] ?? '').trim() && (
+                      {/* Guest toggle: inline "+" or input */}
+                      {isGuestOpen ? (
+                        <input
+                          ref={guestInputRef}
+                          type="text"
+                          placeholder="Naam gast…"
+                          value={guestInputs[key] ?? ''}
+                          onChange={(e) => setGuestInputs((prev) => ({ ...prev, [key]: e.target.value }))}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') addGuest(date, key);
+                            if (e.key === 'Escape') setGuestOpenDay(null);
+                          }}
+                          onBlur={() => { if (!(guestInputs[key] ?? '').trim()) setGuestOpenDay(null); }}
+                          className="w-24 text-xs border border-stone-300 rounded-xl px-2 py-1 focus:outline-none focus:border-sky-400"
+                        />
+                      ) : (
                         <button
-                          onClick={() => addGuest(date, key)}
-                          className="text-xs px-2 py-1 rounded-lg bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]"
+                          onClick={() => setGuestOpenDay(key)}
+                          className="px-2 py-1 text-xs rounded-xl text-stone-400 hover:text-stone-600 hover:bg-stone-100 transition-all"
+                          title="Gast toevoegen"
                         >
-                          +
+                          + gast
                         </button>
                       )}
                     </div>
@@ -266,9 +282,12 @@ export default function WeekPlanning() {
                     {planned ? (
                       <div className="bg-stone-50 border border-stone-200 p-2.5">
                         <p className="text-xs tracking-widest uppercase text-stone-400 mb-1">Diner</p>
-                        <p className="font-[var(--font-playfair)] font-bold text-sm text-stone-900 leading-snug">
+                        <button
+                          onClick={() => setSelectedRecipe(planned)}
+                          className="font-[var(--font-playfair)] font-bold text-sm text-stone-900 leading-snug hover:text-sky-700 transition-colors text-left w-full"
+                        >
                           {planned.name}
-                        </p>
+                        </button>
                         <button
                           onClick={() => setOpenDay(isOpen ? null : key)}
                           className="text-xs text-stone-400 hover:text-stone-700 mt-1.5 underline"
@@ -302,7 +321,7 @@ export default function WeekPlanning() {
                             onClick={() => { saveDay(date, { recipe_id: r.id }); setOpenDay(null); }}
                             className={`w-full text-left px-3 py-2.5 text-sm border transition-colors ${
                               day.recipe_id === r.id
-                                ? 'bg-stone-900 text-white border-stone-900'
+                                ? 'bg-[#C7EBF6] text-stone-800 border-sky-200'
                                 : 'bg-white border-stone-200 text-stone-700 hover:border-stone-900 hover:bg-stone-50'
                             }`}
                           >
@@ -324,6 +343,7 @@ export default function WeekPlanning() {
           })}
         </div>
       )}
+
       {showAddModal && (
         <AddRecipeModal
           onClose={() => { setShowAddModal(false); setAddForDate(null); }}
@@ -338,6 +358,16 @@ export default function WeekPlanning() {
             }
             setAddForDate(null);
           }}
+          allLikers={allLikers}
+        />
+      )}
+
+      {selectedRecipe && (
+        <RecipeModal
+          recipe={selectedRecipe}
+          onClose={() => setSelectedRecipe(null)}
+          onUpdated={() => { load(); setSelectedRecipe(null); }}
+          onDeleted={() => { load(); setSelectedRecipe(null); }}
           allLikers={allLikers}
         />
       )}
