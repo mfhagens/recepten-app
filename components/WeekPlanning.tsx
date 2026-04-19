@@ -3,14 +3,12 @@ import { useState, useEffect, useCallback } from 'react';
 import type { RecipeWithStats } from '@/lib/types';
 import AddRecipeModal from './AddRecipeModal';
 
-const DAYS_NL = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
+const DAYS_NL = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'];
 const MONTHS_NL = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
 
-function getMonday(date: Date): Date {
+function getWeekStart(date: Date): Date {
   const d = new Date(date);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  d.setDate(diff);
+  d.setDate(d.getDate() - d.getDay()); // Sunday = 0
   d.setHours(0, 0, 0, 0);
   return d;
 }
@@ -31,7 +29,7 @@ interface DayState {
 }
 
 export default function WeekPlanning() {
-  const [weekStart, setWeekStart] = useState(() => getMonday(new Date()));
+  const [weekStart, setWeekStart] = useState(() => getWeekStart(new Date()));
   const [recipes, setRecipes] = useState<RecipeWithStats[]>([]);
   const [plans, setPlans] = useState<Record<string, DayState>>({});
   const [loading, setLoading] = useState(true);
@@ -39,6 +37,7 @@ export default function WeekPlanning() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [addForDate, setAddForDate] = useState<Date | null>(null);
   const [weekCook, setWeekCook] = useState<string>('');
+  const [guestInputs, setGuestInputs] = useState<Record<string, string>>({});
 
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
@@ -104,6 +103,16 @@ export default function WeekPlanning() {
     saveDay(date, { eaters });
   }
 
+  function addGuest(date: Date, key: string) {
+    const name = (guestInputs[key] ?? '').trim();
+    if (!name) return;
+    const day = getDay(date);
+    if (!day.eaters.includes(name)) {
+      saveDay(date, { eaters: [...day.eaters, name] });
+    }
+    setGuestInputs((prev) => ({ ...prev, [key]: '' }));
+  }
+
   function getSuggestions(eaters: string[]): RecipeWithStats[] {
     if (eaters.length === 0) return recipes;
     return recipes.filter((r) =>
@@ -132,7 +141,7 @@ export default function WeekPlanning() {
         <div className="text-center">
           <h2 className="font-[var(--font-playfair)] font-bold text-stone-900">{weekLabel}</h2>
           <button
-            onClick={() => setWeekStart(getMonday(new Date()))}
+            onClick={() => setWeekStart(getWeekStart(new Date()))}
             className="text-xs tracking-widest uppercase text-stone-400 hover:text-stone-700 transition-colors"
           >
             Naar deze week
@@ -182,6 +191,7 @@ export default function WeekPlanning() {
             const suggestions = getSuggestions(day.eaters);
             const planned = recipes.find((r) => r.id === day.recipe_id) ?? null;
             const isOpen = openDay === key;
+            const guestEaters = day.eaters.filter((e) => !allLikers.includes(e));
 
             return (
               <div
@@ -191,7 +201,7 @@ export default function WeekPlanning() {
                 {/* Day header */}
                 <div className={`px-3 py-2.5 ${isToday ? 'bg-stone-900' : 'bg-stone-50 border-b border-stone-200'}`}>
                   <p className={`text-xs tracking-widest uppercase font-medium ${isToday ? 'text-stone-400' : 'text-stone-400'}`}>
-                    {DAYS_NL[i]}
+                    {DAYS_NL[date.getDay()]}
                   </p>
                   <p className={`font-[var(--font-playfair)] font-bold text-lg leading-tight ${isToday ? 'text-white' : 'text-stone-900'}`}>
                     {date.getDate()} {MONTHS_NL[date.getMonth()]}
@@ -202,25 +212,53 @@ export default function WeekPlanning() {
                   {/* Eaters */}
                   <div>
                     <p className="text-xs tracking-widest uppercase text-stone-400 mb-1.5">Wie eet mee?</p>
-                    {allLikers.length === 0 ? (
-                      <p className="text-xs text-stone-400">Voeg eerst personen toe aan recepten.</p>
-                    ) : (
-                      <div className="flex flex-wrap gap-1">
-                        {allLikers.map((liker) => (
+                    <div className="flex flex-wrap gap-1">
+                      {allLikers.map((liker) => (
+                        <button
+                          key={liker}
+                          onClick={() => toggleEater(date, liker)}
+                          className={`px-3 py-1 text-xs rounded-xl font-medium transition-all ${
+                            day.eaters.includes(liker)
+                              ? 'bg-stone-900 text-white'
+                              : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
+                          }`}
+                        >
+                          {liker}
+                        </button>
+                      ))}
+                      {/* Guest eaters */}
+                      {guestEaters.map((guest) => (
+                        <span
+                          key={guest}
+                          className="flex items-center gap-1 px-3 py-1 text-xs rounded-xl font-medium bg-sky-100 text-sky-800"
+                        >
+                          {guest}
                           <button
-                            key={liker}
-                            onClick={() => toggleEater(date, liker)}
-                            className={`px-3 py-1 text-xs rounded-xl font-medium transition-all ${
-                              day.eaters.includes(liker)
-                                ? 'bg-stone-900 text-white'
-                                : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
-                            }`}
-                          >
-                            {liker}
-                          </button>
-                        ))}
-                      </div>
-                    )}
+                            onClick={() => toggleEater(date, guest)}
+                            className="text-sky-500 hover:text-sky-800 leading-none"
+                          >×</button>
+                        </span>
+                      ))}
+                    </div>
+                    {/* Guest input */}
+                    <div className="flex gap-1 mt-1.5">
+                      <input
+                        type="text"
+                        placeholder="+ Gast toevoegen"
+                        value={guestInputs[key] ?? ''}
+                        onChange={(e) => setGuestInputs((prev) => ({ ...prev, [key]: e.target.value }))}
+                        onKeyDown={(e) => { if (e.key === 'Enter') addGuest(date, key); }}
+                        className="flex-1 text-xs border border-stone-200 rounded-lg px-2 py-1 focus:outline-none focus:border-stone-400 placeholder-stone-300"
+                      />
+                      {(guestInputs[key] ?? '').trim() && (
+                        <button
+                          onClick={() => addGuest(date, key)}
+                          className="text-xs px-2 py-1 rounded-lg bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]"
+                        >
+                          +
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   {/* Planned recipe */}
@@ -292,7 +330,6 @@ export default function WeekPlanning() {
           onAdded={async () => {
             setShowAddModal(false);
             await load();
-            // Auto-select the newly added recipe (last in list) for the planned date
             if (addForDate) {
               const res = await fetch('/api/recipes');
               const all: RecipeWithStats[] = await res.json();
