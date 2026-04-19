@@ -7,6 +7,7 @@ export interface Recipe {
   liked_by: string;
   url: string;
   photo_url: string;
+  duration: string;
 }
 
 export interface RecipeWithStats extends Recipe {

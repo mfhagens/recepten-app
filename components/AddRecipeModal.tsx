@@ -14,6 +14,7 @@ export default function AddRecipeModal({ onClose, onAdded, allLikers }: Props) {
   const [instructions, setInstructions] = useState('');
   const [tags, setTags] = useState('');
   const [url, setUrl] = useState('');
+  const [duration, setDuration] = useState('');
   const [likers, setLikers] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
 
@@ -31,6 +32,7 @@ export default function AddRecipeModal({ onClose, onAdded, allLikers }: Props) {
         tags,
         url,
         liked_by: likers.join(', '),
+        duration,
       }),
     });
     setSaving(false);
@@ -132,6 +134,26 @@ export default function AddRecipeModal({ onClose, onAdded, allLikers }: Props) {
               className="w-full rounded-xl border border-stone-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
           </div>
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1.5">Bereidingstijd</label>
+            <div className="flex gap-2">
+              {['Snel', 'Normaal', 'Lang'].map((d) => (
+                <button
+                  key={d}
+                  type="button"
+                  onClick={() => setDuration(duration === d ? '' : d)}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                    duration === d
+                      ? 'bg-[#C7EBF6] text-stone-800 border-2 border-sky-600'
+                      : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
+                  }`}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-stone-700 mb-1.5">Lekker voor</label>
             <LikerInput value={likers} onChange={setLikers} suggestions={allLikers} />

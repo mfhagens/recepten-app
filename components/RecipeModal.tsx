@@ -42,6 +42,7 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
   const [editInstructions, setEditInstructions] = useState(recipe.instructions);
   const [editTags, setEditTags] = useState(recipe.tags);
   const [editUrl, setEditUrl] = useState(recipe.url ?? '');
+  const [editDuration, setEditDuration] = useState(recipe.duration ?? '');
   const [editLikers, setEditLikers] = useState(
     recipe.liked_by.split(',').map((s) => s.trim()).filter(Boolean)
   );
@@ -76,6 +77,7 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
         tags: editTags,
         liked_by: editLikers.join(', '),
         url: editUrl,
+        duration: editDuration,
       }),
     });
     setSaving(false);
@@ -125,6 +127,11 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
             )}
             {likers.length > 0 && (
               <p className="mt-1.5 text-xs text-stone-400">♥ {likers.join(', ')}</p>
+            )}
+            {recipe.duration && (
+              <span className="inline-block mt-1.5 text-xs px-2 py-0.5 rounded-xl bg-[#C7EBF6] text-stone-700 border border-sky-200">
+                {recipe.duration}
+              </span>
             )}
             {recipe.url && (
               <a
@@ -288,6 +295,25 @@ export default function RecipeModal({ recipe, onClose, onUpdated, onDeleted, all
                   placeholder="https://www.jumbo.com/recept/..."
                   className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Bereidingstijd</label>
+                <div className="flex gap-2">
+                  {['Snel', 'Normaal', 'Lang'].map((d) => (
+                    <button
+                      key={d}
+                      type="button"
+                      onClick={() => setEditDuration(editDuration === d ? '' : d)}
+                      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                        editDuration === d
+                          ? 'bg-[#C7EBF6] text-stone-800 border-2 border-sky-600'
+                          : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
+                      }`}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1">Lekker voor</label>

@@ -20,6 +20,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       liked_by: body.liked_by ?? '',
       url: body.url ?? '',
       photo_url,
+      duration: body.duration ?? '',
     },
   });
   return NextResponse.json(recipe);

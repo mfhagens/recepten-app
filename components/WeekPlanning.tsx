@@ -41,6 +41,7 @@ export default function WeekPlanning() {
   const [guestInputs, setGuestInputs] = useState<Record<string, string>>({});
   const [guestOpenDay, setGuestOpenDay] = useState<string | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<RecipeWithStats | null>(null);
+  const [pickerDurationFilter, setPickerDurationFilter] = useState<string>('');
   const guestInputRef = useRef<HTMLInputElement>(null);
 
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
@@ -230,7 +231,7 @@ export default function WeekPlanning() {
                           onClick={() => toggleEater(date, liker)}
                           className={`px-3 py-1 text-xs rounded-xl font-medium transition-all ${
                             day.eaters.includes(liker)
-                              ? 'bg-[#C7EBF6] text-stone-800'
+                              ? 'bg-[#C7EBF6] text-stone-800 border-2 border-sky-600'
                               : 'bg-[#E8D9C6] text-stone-900 hover:bg-[#D9C9B4]'
                           }`}
                         >
@@ -307,15 +308,28 @@ export default function WeekPlanning() {
                     {/* Recipe picker */}
                     {isOpen && (
                       <div className="flex flex-col gap-1.5">
-                        <p className="text-xs tracking-widest uppercase text-stone-400">
-                          {day.eaters.length > 0 ? 'Suggesties' : 'Alle recepten'}
-                        </p>
-                        {suggestions.length === 0 && (
+                        {/* Duration filter */}
+                        <div className="flex gap-1">
+                          {['Snel', 'Normaal', 'Lang'].map((d) => (
+                            <button
+                              key={d}
+                              onClick={() => setPickerDurationFilter(pickerDurationFilter === d ? '' : d)}
+                              className={`px-2 py-0.5 text-xs rounded-lg font-medium transition-all ${
+                                pickerDurationFilter === d
+                                  ? 'bg-[#C7EBF6] text-stone-800 border-2 border-sky-600'
+                                  : 'bg-[#E8D9C6] text-stone-800 hover:bg-[#D9C9B4]'
+                              }`}
+                            >
+                              {d}
+                            </button>
+                          ))}
+                        </div>
+                        {suggestions.filter(r => !pickerDurationFilter || r.duration === pickerDurationFilter).length === 0 && (
                           <p className="text-xs text-stone-400 italic">
-                            Geen recepten die iedereen lekker vindt.
+                            Geen recepten gevonden.
                           </p>
                         )}
-                        {suggestions.map((r) => (
+                        {suggestions.filter(r => !pickerDurationFilter || r.duration === pickerDurationFilter).map((r) => (
                           <button
                             key={r.id}
                             onClick={() => { saveDay(date, { recipe_id: r.id }); setOpenDay(null); }}

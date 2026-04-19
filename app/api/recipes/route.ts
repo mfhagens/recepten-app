@@ -40,6 +40,7 @@ export async function GET(req: NextRequest) {
       liked_by: r.liked_by,
       url: r.url,
       photo_url: r.photo_url,
+      duration: r.duration,
       mealCount: r.meals.length,
       lastEaten: dates[0] ?? null,
     };
@@ -60,6 +61,7 @@ export async function POST(req: NextRequest) {
       liked_by: body.liked_by ?? '',
       url: body.url ?? '',
       photo_url,
+      duration: body.duration ?? '',
     },
   });
   return NextResponse.json(recipe, { status: 201 });
