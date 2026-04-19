@@ -56,16 +56,16 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f8f7f4]">
+    <main className="min-h-screen bg-[#F5F0E8]">
       <Header onAddClick={() => setShowAddModal(true)} />
 
       {/* Search & Filter bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-4">
-        <div className="flex flex-col sm:flex-row gap-3">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-4">
+        <div className="flex flex-col gap-4">
           {/* Search */}
-          <div className="relative flex-1">
+          <div className="relative">
             <svg
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none"
               fill="none" viewBox="0 0 24 24" stroke="currentColor"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -76,12 +76,12 @@ export default function Home() {
               placeholder="Zoek op naam, ingrediënt of tag…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm text-sm"
+              className="w-full pl-11 pr-4 py-3 border border-stone-300 bg-white text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900 text-sm tracking-wide"
             />
             {search && (
               <button
                 onClick={() => setSearch('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -93,16 +93,17 @@ export default function Home() {
           {/* Liker filter chips */}
           {allLikers.length > 0 && (
             <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-xs tracking-widest uppercase text-stone-400 mr-1">Voor:</span>
               {allLikers.map((liker) => {
                 const active = likerFilters.includes(liker);
                 return (
                   <button
                     key={liker}
                     onClick={() => toggleLiker(liker)}
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                    className={`px-3 py-1 text-xs tracking-wider uppercase font-medium border transition-colors ${
                       active
-                        ? 'bg-green-700 text-white border-green-700'
-                        : 'bg-white text-stone-600 border-stone-200 hover:border-green-400 hover:text-green-700'
+                        ? 'bg-stone-900 text-white border-stone-900'
+                        : 'bg-transparent text-stone-600 border-stone-400 hover:border-stone-900 hover:text-stone-900'
                     }`}
                   >
                     {active ? '✓ ' : ''}{liker}
@@ -112,7 +113,7 @@ export default function Home() {
               {likerFilters.length > 0 && (
                 <button
                   onClick={() => setLikerFilters([])}
-                  className="text-xs text-stone-400 hover:text-stone-600 underline"
+                  className="text-xs text-stone-400 hover:text-stone-600 underline tracking-wide"
                 >
                   wis filter
                 </button>
@@ -123,7 +124,7 @@ export default function Home() {
 
         {/* Results info */}
         {!loading && (
-          <p className="mt-3 text-xs text-stone-400">
+          <p className="mt-3 text-xs tracking-widest uppercase text-stone-400">
             {recipes.length === 0
               ? (search || likerFilters.length > 0 ? 'Geen recepten gevonden' : 'Nog geen recepten')
               : `${recipes.length} recept${recipes.length !== 1 ? 'en' : ''}${search || likerFilters.length > 0 ? ' gevonden' : ''}`}
@@ -132,18 +133,18 @@ export default function Home() {
       </div>
 
       {/* Recipe grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 pb-16">
         {loading ? (
           <div className="flex justify-center py-24">
             <div className="w-8 h-8 border-2 border-green-600 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : recipes.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
-            <span className="text-6xl mb-4">🍽️</span>
-            <h3 className="text-xl font-[var(--font-playfair)] font-bold text-stone-800 mb-2">
+            <span className="text-6xl mb-6">🍽️</span>
+            <h3 className="font-[var(--font-playfair)] text-2xl font-bold text-stone-800 mb-2">
               {search || likerFilters.length > 0 ? 'Geen recepten gevonden' : 'Nog geen recepten'}
             </h3>
-            <p className="text-stone-500 text-sm">
+            <p className="text-xs tracking-widest uppercase text-stone-400">
               {search || likerFilters.length > 0
                 ? 'Probeer een andere zoekterm of selectie.'
                 : 'Voeg je eerste recept toe via de knop rechtsboven.'}
