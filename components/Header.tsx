@@ -3,9 +3,11 @@ import { useState } from 'react';
 
 interface Props {
   onAddClick: () => void;
+  activeTab: 'recepten' | 'planning';
+  onTabChange: (tab: 'recepten' | 'planning') => void;
 }
 
-export default function Header({ onAddClick }: Props) {
+export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
   const [showExport, setShowExport] = useState(false);
 
   function exportCSV(table: string) {
@@ -73,9 +75,23 @@ export default function Header({ onAddClick }: Props) {
         </div>
       </div>
 
-      {/* Thin decorative line */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 pb-4">
-        <div className="border-t border-stone-700" />
+      {/* Tab nav */}
+      <div className="border-t border-stone-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 flex gap-0">
+          {(['recepten', 'planning'] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => onTabChange(tab)}
+              className={`py-3 px-5 text-xs tracking-widest uppercase font-medium border-b-2 transition-colors ${
+                activeTab === tab
+                  ? 'border-white text-white'
+                  : 'border-transparent text-stone-400 hover:text-stone-200'
+              }`}
+            >
+              {tab === 'recepten' ? 'Recepten' : 'Weekplanning'}
+            </button>
+          ))}
+        </div>
       </div>
     </header>
   );

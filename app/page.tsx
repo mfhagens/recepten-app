@@ -59,26 +59,11 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#F5F0E8]">
-      <Header onAddClick={() => setShowAddModal(true)} />
-
-      {/* Tabs */}
-      <div className="border-b border-stone-200 bg-[#F5F0E8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 flex gap-0">
-          {(['recepten', 'planning'] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`py-3 px-5 text-xs tracking-widest uppercase font-medium border-b-2 transition-colors ${
-                activeTab === tab
-                  ? 'border-stone-900 text-stone-900'
-                  : 'border-transparent text-stone-400 hover:text-stone-700'
-              }`}
-            >
-              {tab === 'recepten' ? 'Recepten' : 'Weekplanning'}
-            </button>
-          ))}
-        </div>
-      </div>
+      <Header
+        onAddClick={() => setShowAddModal(true)}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
 
       {/* Weekplanning tab */}
       {activeTab === 'planning' && <WeekPlanning />}
