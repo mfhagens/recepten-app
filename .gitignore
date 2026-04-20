@@ -26,3 +26,4 @@ prisma/migrations/
 # Build
 dist/
 build/
+tsconfig.tsbuildinfo
