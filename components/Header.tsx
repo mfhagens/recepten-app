@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 
 interface Props {
   onAddClick: () => void;
-  activeTab: 'recepten' | 'planning';
-  onTabChange: (tab: 'recepten' | 'planning') => void;
+  activeTab: 'recepten' | 'planning' | 'boodschappen';
+  onTabChange: (tab: 'recepten' | 'planning' | 'boodschappen') => void;
 }
 
 export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
@@ -74,7 +74,7 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
           <div className="flex gap-0">
-            {(['planning', 'recepten'] as const).map((tab) => (
+            {(['planning', 'recepten', 'boodschappen'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => onTabChange(tab)}
@@ -84,7 +84,7 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
                   borderBottomColor: activeTab === tab ? 'white' : 'transparent',
                 }}
               >
-                {tab === 'recepten' ? 'Recepten' : 'Weekplanning'}
+                {tab === 'recepten' ? 'Recepten' : tab === 'planning' ? 'Weekplanning' : 'Boodschappen'}
               </button>
             ))}
           </div>

@@ -29,7 +29,7 @@ interface DayState {
   recipe_id: number | null;
 }
 
-export default function WeekPlanning() {
+export default function WeekPlanning({ onGoToShopping }: { onGoToShopping?: (week: Date) => void }) {
   const [weekStart, setWeekStart] = useState(() => getWeekStart(new Date()));
   const [recipes, setRecipes] = useState<RecipeWithStats[]>([]);
   const [plans, setPlans] = useState<Record<string, DayState>>({});
@@ -152,13 +152,27 @@ export default function WeekPlanning() {
         </button>
         <div className="text-center">
           <h2 className="font-[var(--font-playfair)] font-semibold" style={{ color: '#1F2430' }}>{weekLabel}</h2>
-          <button
-            onClick={() => setWeekStart(getWeekStart(new Date()))}
-            className="text-xs tracking-widest uppercase transition-colors"
-            style={{ color: '#A09588' }}
-          >
-            Naar deze week
-          </button>
+          <div className="flex items-center justify-center gap-3 mt-0.5">
+            <button
+              onClick={() => setWeekStart(getWeekStart(new Date()))}
+              className="text-xs tracking-widest uppercase transition-colors"
+              style={{ color: '#A09588' }}
+            >
+              Naar deze week
+            </button>
+            {onGoToShopping && (
+              <button
+                onClick={() => onGoToShopping(weekStart)}
+                className="flex items-center gap-1 text-xs tracking-widest uppercase transition-colors"
+                style={{ color: '#48656A' }}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6h13" />
+                </svg>
+                Boodschappen
+              </button>
+            )}
+          </div>
         </div>
         <button
           onClick={() => setWeekStart((d) => addDays(d, 7))}

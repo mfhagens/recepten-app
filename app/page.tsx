@@ -6,6 +6,7 @@ import RecipeCard from '@/components/RecipeCard';
 import RecipeModal from '@/components/RecipeModal';
 import AddRecipeModal from '@/components/AddRecipeModal';
 import WeekPlanning from '@/components/WeekPlanning';
+import BoodschappenList from '@/components/BoodschappenList';
 import type { RecipeWithStats } from '@/lib/types';
 
 export default function Home() {
@@ -15,7 +16,8 @@ export default function Home() {
   const [likerFilters, setLikerFilters] = useState<string[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<RecipeWithStats | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<'recepten' | 'planning'>('planning');
+  const [activeTab, setActiveTab] = useState<'recepten' | 'planning' | 'boodschappen'>('planning');
+  const [shoppingWeek, setShoppingWeek] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     fetch('/api/photos/backfill', { method: 'POST' });
@@ -70,7 +72,16 @@ export default function Home() {
       />
 
       {/* Weekplanning tab */}
-      {activeTab === 'planning' && <WeekPlanning />}
+      {activeTab === 'planning' && (
+        <WeekPlanning
+          onGoToShopping={(week) => { setShoppingWeek(week); setActiveTab('boodschappen'); }}
+        />
+      )}
+
+      {/* Boodschappenlijst tab */}
+      {activeTab === 'boodschappen' && (
+        <BoodschappenList key={shoppingWeek?.toISOString()} initialWeek={shoppingWeek} />
+      )}
 
       {/* Search & Filter bar */}
       {activeTab === 'recepten' && <>
