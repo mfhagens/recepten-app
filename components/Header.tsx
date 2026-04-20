@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface Props {
@@ -72,13 +72,17 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
 
       {/* Tab nav */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
-          <div className="flex gap-0">
+        <div className="max-w-7xl mx-auto flex items-stretch">
+          {/* Scrollable tabs */}
+          <div
+            className="flex flex-1 min-w-0 overflow-x-auto px-4 sm:px-8"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
+          >
             {(['planning', 'recepten', 'boodschappen'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => onTabChange(tab)}
-                className="py-3 px-5 text-xs tracking-widest uppercase font-medium border-b-2 transition-colors"
+                className="py-3 px-4 sm:px-5 text-xs tracking-widest uppercase font-medium border-b-2 transition-colors whitespace-nowrap shrink-0"
                 style={{
                   color: activeTab === tab ? 'white' : 'rgba(255,255,255,0.65)',
                   borderBottomColor: activeTab === tab ? 'white' : 'transparent',
@@ -89,8 +93,8 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
             ))}
           </div>
 
-          {/* Right side: Export + Uitloggen */}
-          <div className="flex items-center gap-5">
+          {/* Right side: Export + Uitloggen — shrink-0 so tabs scroll under it */}
+          <div className="flex items-center gap-4 px-4 sm:px-8 shrink-0">
             <div className="relative hidden sm:block">
               <button
                 onClick={() => setShowExport((v) => !v)}
