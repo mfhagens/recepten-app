@@ -313,13 +313,22 @@ export default function WeekPlanning({ onGoToShopping }: { onGoToShopping?: (wee
                         >
                           {planned.name}
                         </button>
-                        <button
-                          onClick={() => setOpenDay(isOpen ? null : key)}
-                          className="text-xs mt-1.5 underline"
-                          style={{ color: '#8A8176' }}
-                        >
-                          Wijzigen
-                        </button>
+                        <div className="flex items-center gap-3 mt-1.5">
+                          <button
+                            onClick={() => setOpenDay(isOpen ? null : key)}
+                            className="text-xs underline"
+                            style={{ color: '#8A8176' }}
+                          >
+                            Wijzigen
+                          </button>
+                          <button
+                            onClick={() => saveDay(date, { recipe_id: null })}
+                            className="text-xs underline"
+                            style={{ color: '#C0796A' }}
+                          >
+                            Wissen
+                          </button>
+                        </div>
                       </div>
                     ) : (
                       <button
