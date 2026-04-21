@@ -48,3 +48,10 @@ model ShoppingExtra {
   text    String
   checked Boolean @default(false)
 }
+
+model GoogleToken {
+  user          String @id
+  access_token  String
+  refresh_token String @default("")
+  expires_at    Int    @default(0)
+}
