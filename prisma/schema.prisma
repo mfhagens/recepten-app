@@ -41,3 +41,10 @@ model Plan {
   eaters    String  @default("")
   recipe    Recipe? @relation(fields: [recipe_id], references: [id], onDelete: SetNull)
 }
+
+model ShoppingExtra {
+  id      Int     @id @default(autoincrement())
+  week    String
+  text    String
+  checked Boolean @default(false)
+}
