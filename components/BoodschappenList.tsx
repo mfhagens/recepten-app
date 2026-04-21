@@ -115,6 +115,24 @@ export default function BoodschappenList({ initialWeek }: Props) {
     });
   }
 
+  const [copied, setCopied] = useState(false);
+
+  function copyList() {
+    const lines: string[] = [];
+    Object.entries(grouped).forEach(([recipeName, recipeItems]) => {
+      lines.push(`— ${recipeName} —`);
+      recipeItems.forEach(i => lines.push(i.text));
+      lines.push('');
+    });
+    if (extras.length > 0) {
+      lines.push('— Overig —');
+      extras.forEach(e => lines.push(e.text));
+    }
+    navigator.clipboard.writeText(lines.join('\n').trim());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   const grouped = items.reduce<Record<string, { text: string; checked: boolean; idx: number }[]>>(
     (acc, item, idx) => {
       if (!acc[item.recipeName]) acc[item.recipeName] = [];
@@ -176,15 +194,38 @@ export default function BoodschappenList({ initialWeek }: Props) {
               <p className="text-xs tracking-widest uppercase" style={{ color: '#8A8176' }}>
                 {totalChecked} / {totalItems} in huis
               </p>
-              {checkedRecipe > 0 && (
+              <div className="flex items-center gap-4">
+                {checkedRecipe > 0 && (
+                  <button
+                    onClick={() => setItems(prev => prev.map(i => ({ ...i, checked: false })))}
+                    className="text-xs underline tracking-wide"
+                    style={{ color: '#8A8176' }}
+                  >
+                    wis selectie
+                  </button>
+                )}
                 <button
-                  onClick={() => setItems(prev => prev.map(i => ({ ...i, checked: false })))}
-                  className="text-xs underline tracking-wide"
-                  style={{ color: '#8A8176' }}
+                  onClick={copyList}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all"
+                  style={{ backgroundColor: copied ? '#D9EDD4' : '#E5DED2', color: copied ? '#27412D' : '#48656A', borderRadius: '8px' }}
                 >
-                  wis selectie
+                  {copied ? (
+                    <>
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      Gekopieerd
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      Kopieer lijst
+                    </>
+                  )}
                 </button>
-              )}
+              </div>
             </div>
           )}
 
