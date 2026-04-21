@@ -78,7 +78,7 @@ export default function Header({ onAddClick, activeTab, onTabChange }: Props) {
             className="flex flex-1 min-w-0 overflow-x-auto px-4 sm:px-8"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
           >
-            {(['planning', 'recepten', 'boodschappen'] as const).map((tab) => (
+            {(['planning', 'boodschappen', 'recepten'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => onTabChange(tab)}
