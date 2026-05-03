@@ -148,13 +148,25 @@ export default function Home() {
           )}
         </div>
 
-        {/* Results info */}
+        {/* Results info + add button */}
         {!loading && (
-          <p className="mt-3 text-xs tracking-widest uppercase text-stone-400">
-            {recipes.length === 0
-              ? (search || likerFilters.length > 0 ? 'Geen recepten gevonden' : 'Nog geen recepten')
-              : `${recipes.length} recept${recipes.length !== 1 ? 'en' : ''}${search || likerFilters.length > 0 ? ' gevonden' : ''}`}
-          </p>
+          <div className="mt-3 flex items-center justify-between">
+            <p className="text-xs tracking-widest uppercase text-stone-400">
+              {recipes.length === 0
+                ? (search || likerFilters.length > 0 ? 'Geen recepten gevonden' : 'Nog geen recepten')
+                : `${recipes.length} recept${recipes.length !== 1 ? 'en' : ''}${search || likerFilters.length > 0 ? ' gevonden' : ''}`}
+            </p>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium transition-all"
+              style={{ backgroundColor: '#B8CFAF', color: '#27412D', borderRadius: '10px' }}
+            >
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Nieuw recept
+            </button>
+          </div>
         )}
       </div>
 
@@ -204,10 +216,7 @@ export default function Home() {
       {showAddModal && (
         <AddRecipeModal
           onClose={() => setShowAddModal(false)}
-          onAdded={() => {
-            fetchRecipes();
-            setShowAddModal(false);
-          }}
+          onAdded={() => { fetchRecipes(); setShowAddModal(false); }}
           allLikers={allLikers}
         />
       )}

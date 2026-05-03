@@ -4,7 +4,7 @@ import LikerInput from './LikerInput';
 
 interface Props {
   onClose: () => void;
-  onAdded: () => void;
+  onAdded: (id: number) => void;
   allLikers: string[];
 }
 
@@ -22,7 +22,7 @@ export default function AddRecipeModal({ onClose, onAdded, allLikers }: Props) {
     e.preventDefault();
     if (!name.trim()) return;
     setSaving(true);
-    await fetch('/api/recipes', {
+    const res = await fetch('/api/recipes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -35,8 +35,9 @@ export default function AddRecipeModal({ onClose, onAdded, allLikers }: Props) {
         duration,
       }),
     });
+    const created = await res.json();
     setSaving(false);
-    onAdded();
+    onAdded(created.id);
   }
 
   return (

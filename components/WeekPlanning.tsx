@@ -400,16 +400,11 @@ export default function WeekPlanning({ onGoToShopping }: { onGoToShopping?: (wee
       {showAddModal && (
         <AddRecipeModal
           onClose={() => { setShowAddModal(false); setAddForDate(null); }}
-          onAdded={async () => {
+          onAdded={async (newId: number) => {
             setShowAddModal(false);
-            await load();
-            if (addForDate) {
-              const res = await fetch('/api/recipes');
-              const all: RecipeWithStats[] = await res.json();
-              const newest = all[all.length - 1];
-              if (newest) saveDay(addForDate, { recipe_id: newest.id });
-            }
+            if (addForDate) saveDay(addForDate, { recipe_id: newId });
             setAddForDate(null);
+            await load();
           }}
           allLikers={allLikers}
         />
